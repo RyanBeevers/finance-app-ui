@@ -6,6 +6,10 @@ import { AppComponent } from './app.component';
 import { AngularFireModule } from  '@angular/fire/compat';
 import { AngularFirestoreModule } from  '@angular/fire/compat/firestore';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { NavbarComponent } from './core-components/navbar/navbar.component';
+import { CoreComponentsModule } from './core-components/core-components.module';
 
 @NgModule({
   declarations: [
@@ -24,9 +28,13 @@ import { FormsModule } from '@angular/forms';
       appId: "1:878790212670:web:e38482da5c7d28a7e2e56f",
       measurementId: "G-RSR4LHZCY6"
     }),
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    RouterModule.forRoot([]),
+    CommonModule,
+    CoreComponentsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: []
 })
 export class AppModule { }

@@ -1,0 +1,12 @@
+<div class="container" style="margin-top: 25px;">
+    <h2>List of Bills</h2>
+    <ul class="list-group">
+      <li *ngFor="let bill of listOfBills" class="list-group-item">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">{{ bill.name }}</h5>
+          <small>Due Day: {{ bill.dueDay }}</small>
+        </div>
+        <p class="mb-1">Amount: ${{ bill.amount }}</p>
+      </li>
+    </ul>
+  </div>
