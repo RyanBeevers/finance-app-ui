@@ -14,6 +14,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     DropdownModule,
     CalendarModule,
     InputTextModule,
-    InputNumberModule
+    InputNumberModule,
+    TooltipModule
   ],
   exports: [
     NavbarComponent,

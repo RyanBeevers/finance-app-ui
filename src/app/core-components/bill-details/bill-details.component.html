@@ -35,7 +35,7 @@
                     <label for="category">Category</label>
                 </div>
                 <div class="col-8" style="display: inline-block;">
-                    <p-dropdown id="category" [(ngModel)]="bill.category" [style]="{width: '100%'}"></p-dropdown>
+                    <p-dropdown id="category" [(ngModel)]="bill.category" [style]="{width: '100%'}" [options]="categories" (ngModelChange)="setSubCategories(bill.category)"></p-dropdown>
                 </div>
             </div>
             <!-- Sub-Category -->
@@ -43,8 +43,8 @@
                 <div class="col-4" style="display: inline-block;">
                     <label for="subCategory">Sub-Category</label>
                 </div>
-                <div class="col-8" style="display: inline-block;">
-                    <p-dropdown id="subCategory" [(ngModel)]="bill.subCategory" [style]="{width: '100%'}"></p-dropdown>
+                <div class="col-8" style="display: inline-block;" *ngIf="bill.category">
+                    <p-dropdown id="subCategory" [(ngModel)]="bill.subCategory" [options]="subCategories" [style]="{width: '100%'}"></p-dropdown>
                 </div>
             </div>
             <!-- Due Date Modifiable -->

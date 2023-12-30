@@ -22,15 +22,37 @@
         <ng-template pTemplate="body" let-rowData let-columns="columns">
             <tr>
                 <td *ngFor="let col of columns">
-                  <span class="p-column-title">{{col.header}}: {{rowData.data[col.field]}}</span>
-                  <div *ngIf="col.header !== 'Actions'">
+                  <span class="p-column-title" *ngIf="col.header !== 'Actions' && col.header !== 'Details'">{{col.header}}: {{rowData.data[col.field]}}</span>
+                  <span class="p-column-title" *ngIf="col.header === 'Actions'">
+                    {{col.header}}: 
+                    <br>
+                    <span style="margin-right: 10px; cursor: pointer;" (click)="edit(rowData.data['id'])"><i class="pi pi-pencil "></i>Edit</span>
+                    <br>
+                    <span style="margin-right: 10px; cursor: pointer;" (click)="confirmDelete(rowData.data['id'])"><i class="pi pi-trash "></i>Delete</span>
+                  </span>
+                  <span class="p-column-title" *ngIf="col.header === 'Details'">
+                    {{col.header}}: 
+                    <i class="pi pi-money-bill" style="color: blue; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.billVariableFlag" pTooltip="Bill Ammount Varies"></i> <!-- Bill Variable -->
+                    <i class="pi pi-calendar-minus" style="color: orange; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.dueDateModifiableFlag" pTooltip="Bill Pay Date Can Be Changed"></i> <!-- Date Modifiable -->
+                    <i class="pi pi-refresh" style="color: purple; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.recurringFlag" pTooltip="Recurring"></i> <!-- Recurring or Continuous -->
+                    <i class="pi pi-exclamation-triangle" style="color: red; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.lateFeeFlag" pTooltip="There is a late fee."></i> <!-- Late Fee -->
+                    <i class="pi pi-check" style="color: green; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.autopayFlag" pTooltip="Autopay Is Enabled"></i> <!-- Auto Pay -->
+                  </span>
+                  <div *ngIf="col.header !== 'Actions' && col.header !== 'Details'">
                       {{ rowData.data[col.field] }}
                   </div>
-                  <div *ngIf="col.header === 'Actions'">
+                  <div *ngIf="col.header === 'Actions' && col.header !== 'Details'">
                     <!-- <i class="pi pi-pencil " style="margin-right: 10px; cursor: pointer;" (click)="edit(rowData.data['id'])"></i>Edit -->
                     <span style="margin-right: 10px; cursor: pointer;" (click)="edit(rowData.data['id'])"><i class="pi pi-pencil "></i>Edit</span>
                     <br>
                     <span style="margin-right: 10px; cursor: pointer;" (click)="confirmDelete(rowData.data['id'])"><i class="pi pi-trash "></i>Delete</span>
+                  </div>
+                  <div *ngIf="col.header === 'Details'">
+                    <i class="pi pi-money-bill" style="color: blue; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.billVariableFlag" pTooltip="Bill Ammount Varies"></i> <!-- Bill Variable -->
+                    <i class="pi pi-calendar-minus" style="color: orange; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.dueDateModifiableFlag" pTooltip="Bill Pay Date Can Be Changed"></i> <!-- Date Modifiable -->
+                    <i class="pi pi-refresh" style="color: purple; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.recurringFlag" pTooltip="Recurring"></i> <!-- Recurring or Continuous -->
+                    <i class="pi pi-exclamation-triangle" style="color: red; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.lateFeeFlag" pTooltip="There is a late fee."></i> <!-- Late Fee -->
+                    <i class="pi pi-check" style="color: green; margin-right: 8px; font-size: 1.5rem" *ngIf="rowData.data.autopayFlag" pTooltip="Autopay Is Enabled"></i> <!-- Auto Pay -->
                   </div>
                 </td>
             </tr>

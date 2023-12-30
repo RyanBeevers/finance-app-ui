@@ -40,6 +40,7 @@ export class ManageBillsComponent {
       { field: 'dueDay', header: 'Due Date' },
       { field: 'amount', header: 'Amount' },
       { field: 'actions', header: 'Actions' },
+      { field: 'details', header: 'Details' }
     ];
   }
 
@@ -75,14 +76,6 @@ export class ManageBillsComponent {
   }
 
   edit(id: string) {
-    // this.store.collection('newObjectTest').doc(id).get().subscribe((response) => {
-    //   this.editObj = Object.assign({ id: response.id }, response.data());
-    //   this.name = this.editObj.name;
-    //   this.dueDay = this.editObj.dueDay;
-    //   this.amount = this.editObj.amount
-    //   this.openDialog();
-    // })
-    console.log(id);
     this.editId = id;
     this.openDialog();
   }
