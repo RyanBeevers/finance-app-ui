@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
 import { ManageBillsComponent } from './core-components/manage-bills/manage-bills.component';
-import { ViewCalednarComponent } from './core-components/view-calednar/view-calednar.component';
+import { ViewCalednarComponent } from './core-components/view-calendar/view-calednar.component';
+import { HomeComponent } from './core-components/home/home.component';
 
 const routes: Routes = [
   {
