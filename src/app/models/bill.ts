@@ -1,7 +1,8 @@
-export interface bill {
-    billName: string;
-    billAmount: number;
-    dayOfTheMonthDue: number;
+export interface Bill {
+    id?: string;
+    name: string;
+    amount: number;
+    dueDay: number;
     billVariableFlag: boolean;
     billAverage?: number;
     dueDateModifiableFlag: boolean;
@@ -10,9 +11,14 @@ export interface bill {
     daysUntilLateFee?: number
     lateFeeAmount?: number;
     continuousFlag?: boolean;
+    endDateFlag: boolean;
     endDate?: Date;
     autopayFlag: boolean;
-    weekly: boolean;
+    weeklyFlag: boolean;
     dayOfTheWeek?: string;
-    category: number
+    category: string;
+    subCategory?: string;
+    trackSpendingFlag: boolean;
+    spent?: number;
+    frequency?: number;
 }

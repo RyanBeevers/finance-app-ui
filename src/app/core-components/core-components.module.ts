@@ -9,13 +9,19 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BillDetailsComponent } from './bill-details/bill-details.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
     ManageBillsComponent,
     NavbarComponent,
     ViewCalednarComponent,
-    HomeComponent
+    HomeComponent,
+    BillDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -23,10 +29,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     TableModule,
     ButtonModule,
     DialogModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    DropdownModule,
+    CalendarModule,
+    InputTextModule,
+    InputNumberModule
   ],
   exports: [
-    NavbarComponent
+    NavbarComponent,
+    BillDetailsComponent
   ]
 })
 export class CoreComponentsModule { }

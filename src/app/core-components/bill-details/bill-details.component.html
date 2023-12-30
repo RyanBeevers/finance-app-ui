@@ -1,0 +1,203 @@
+<div class="container-fluid">
+    <div class="row" *ngIf="bill">
+
+        <div class="col-lg-6 col-12" style="display: inline-block; padding: 10px">
+            <!-- Name -->
+            <div class="col-12" style="margin-top: 10px;">
+                <div class="col-4" style="display: inline-block;">
+                    <label for="name">Name</label>
+                </div>
+                <div class="col-8" style="display: inline-block;">
+                    <input pInputText style="width: 100%" type="text" id="name" [(ngModel)]="bill.name" />
+                </div>
+            </div>
+            <!-- Amount -->
+            <div class="col-12" style="margin-top: 10px;">
+                <div class="col-4" style="display: inline-block;">
+                    <label for="amount">Amount</label>
+                </div>
+                <div class="col-8" style="display: inline-block;">
+                    <p-inputNumber mode="currency" currency="USD" locale="en-US" [style]="{'width': '80%'}" id="amount" [(ngModel)]="bill.amount"></p-inputNumber>
+                </div>
+            </div>
+            <!-- Due Day -->
+            <div class="col-12" style="margin-top: 10px;">
+                <div class="col-4" style="display: inline-block;">
+                    <label for="dueDay">Due Day</label>
+                </div>
+                <div class="col-8" style="display: inline-block;">
+                    <p-inputNumber [style]="{'width': '80%'}" id="dueDay" [(ngModel)]="bill.dueDay"></p-inputNumber>
+                </div>
+            </div>
+            <!-- Category -->
+            <div class="col-12" style="margin-top: 10px;">
+                <div class="col-4" style="display: inline-block;">
+                    <label for="category">Category</label>
+                </div>
+                <div class="col-8" style="display: inline-block;">
+                    <p-dropdown id="category" [(ngModel)]="bill.category" [style]="{width: '100%'}"></p-dropdown>
+                </div>
+            </div>
+            <!-- Sub-Category -->
+            <div class="col-12" style="margin-top: 10px;">
+                <div class="col-4" style="display: inline-block;">
+                    <label for="subCategory">Sub-Category</label>
+                </div>
+                <div class="col-8" style="display: inline-block;">
+                    <p-dropdown id="subCategory" [(ngModel)]="bill.subCategory" [style]="{width: '100%'}"></p-dropdown>
+                </div>
+            </div>
+            <!-- Due Date Modifiable -->
+            <div class="col-12"
+                style="margin-top: 10px; border: solid 0.5px white; border-radius: 10px; padding: 10px;">
+                <div class="col-1" style="display: inline-block; vertical-align: top">
+                    <input type="checkbox" id="dueDateModifiable" [(ngModel)]="bill.dueDateModifiableFlag">
+                </div>
+                <div class="col-11" style="display: inline-block; vertical-align: top">
+                    <label for="dueDateModifiable" style="margin-left: 10px;">Due Date Modifiable</label>
+                </div>
+            </div>
+            <!-- Is this bill recurring? -->
+            <div class="col-12"
+                style="margin-top: 10px; border: solid 0.5px white; border-radius: 10px; padding: 10px;">
+                <div class="col-1" style="display: inline-block; vertical-align: top">
+                    <input type="checkbox" id="recurring" [(ngModel)]="bill.recurringFlag">
+                </div>
+                <div class="col-11" style="display: inline-block; vertical-align: top">
+                    <label for="recurring" style="margin-left: 10px;">Is this bill recurring?</label>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="col-lg-6 col-12" style="display: inline-block; padding-left: 15px;">
+            <div style=" border: solid 0.5px white; border-radius: 10px; padding: 10px;">
+                <!-- Bill Variable Amount -->
+                <div class="col-12" style="margin-top: 10px;">
+                    <div class="col-1" style="display: inline-block; vertical-align: top">
+                        <input type="checkbox" id="variableAmount" [(ngModel)]="bill.billVariableFlag">
+                    </div>
+                    <div class="col-11" style="display: inline-block; vertical-align: top">
+                        <label for="variableAmount" style="margin-left: 10px;">Bill Variable Amount</label>
+                    </div>
+                </div>
+                <!-- Bill Average Amount -->
+                <div class="col-12" style="margin-top: 10px; margin-left: 50px;">
+                    <div>
+                        <label for="averageAmount" *ngIf="bill.billVariableFlag">Bill Average
+                            Amount</label>
+                    </div>
+                    <div>
+                        <p-inputNumber mode="currency" currency="USD" locale="en-US" id="averageAmount" [(ngModel)]="bill.billAverage"
+                            *ngIf="bill.billVariableFlag"></p-inputNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div style="border: solid 0.5px white; border-radius: 10px; padding: 10px; margin-top: 10px;">
+                <!-- Does this bill have an end date? (i.e. Affirm) -->
+                <div class="col-12" style="margin-top: 10px;">
+                    <div class="col-1" style="display: inline-block; vertical-align: top;">
+                        <input type="checkbox" id="endDateFlag" [(ngModel)]="bill.endDateFlag">
+                    </div>
+                    <div class="col-11" style="display: inline-block; vertical-align: top">
+                        <label for="endDateFlag" style="margin-left: 10px;">Does this bill have an end date? (i.e.
+                            Affirm)</label>
+                    </div>
+                </div>
+
+                <!-- End Date -->
+                <div *ngIf="bill.endDateFlag" class="col-12" style="margin-top: 10px; margin-left: 50px;">
+                    <div>
+                        <label for="endDate" *ngIf="bill.endDateFlag">End Date</label>
+                    </div>
+                    <div>
+                        <p-calendar id="endDate" [(ngModel)]="bill.endDate"></p-calendar>
+                    </div>
+                </div>
+            </div>
+            <!-- On Autopay? -->
+            <div class="col-12"
+                style="margin-top: 10px; border: solid 0.5px white; border-radius: 10px; padding: 10px;">
+                <div class="col-1" style="display: inline-block; vertical-align: top">
+                    <input type="checkbox" id="autopayFlag" [(ngModel)]="bill.autopayFlag">
+                </div>
+                <div class="col-11" style="display: inline-block; vertical-align: top">
+                    <label for="autopayFlag" style="margin-left: 10px;">On Autopay?</label>
+                </div>
+            </div>
+            <!-- Do you want to track spending on this? -->
+            <div class="col-12"
+                style="margin-top: 10px; border: solid 0.5px white; border-radius: 10px; padding: 10px;">
+                <div class="col-1" style="display: inline-block; vertical-align: top">
+                    <input type="checkbox" id="trackSpendingFlag" [(ngModel)]="bill.trackSpendingFlag">
+                </div>
+                <div class="col-11" style="display: inline-block; vertical-align: top">
+                    <label for="trackSpendingFlag" style="margin-left: 10px;">Do you want to track spending on
+                        this?</label>
+                </div>
+            </div>
+            <!-- Weekly Expense -->
+            <div style="border: solid 0.5px white; border-radius: 10px; padding: 10px; margin-top: 10px;">
+                <div class="col-12">
+                    <div class="col-1" style="display: inline-block; vertical-align: top">
+                        <input type="checkbox" id="weeklyFlag" [(ngModel)]="bill.weeklyFlag">
+                    </div>
+                    <div class="col-11" style="display: inline-block; vertical-align: top">
+                        <label for="weeklyFlag" style="margin-left: 10px;">Weekly Expense</label>
+                    </div>
+                </div>
+                <!-- What day of the week do you want this on? -->
+                <div *ngIf="bill.weeklyFlag" class="col-12" style="margin-top: 10px; margin-left: 50px;">
+                    <div>
+                        <label for="dayOfTheWeek">What day of the week do you want this on?</label>
+                    </div>
+                    <div>
+                        <p-dropdown id="dayOfTheWeek" [(ngModel)]="bill.dayOfTheWeek" 
+                        [options]="daysOfTheWeek" [style]="{'width': '75%'}">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+            </div>
+            <div style="border: solid 0.5px white; border-radius: 10px; padding: 10px; margin-top: 10px;">
+                <!-- Does this bill have a late fee? -->
+                <div class="col-12">
+                    <div class="col-1" style="display: inline-block; vertical-align: top">
+                        <input type="checkbox" id="lateFee" [(ngModel)]="bill.lateFeeFlag">
+                    </div>
+                    <div class="col-11" style="display: inline-block; vertical-align: top">
+                        <label for="lateFee" style="margin-left: 10px;">Does this bill have a late fee?</label>
+                    </div>
+                </div>
+                <!-- How many days before late fee is incurred? -->
+                <div *ngIf="bill.lateFeeFlag" class="col-12" style="margin-top: 10px; margin-left: 50px;">
+                    <div>
+                        <label for="daysUntilLateFee">How many days before late fee is incurred?</label>
+                    </div>
+                    <div>
+                        <p-inputNumber type="number" id="daysUntilLateFee" [(ngModel)]="bill.daysUntilLateFee"></p-inputNumber>
+                    </div>
+                </div>
+                <!-- How much is the late fee? -->
+                <div *ngIf="bill.lateFeeFlag" class="col-12" style="margin-top: 10px; margin-left: 50px;">
+                    <div>
+                        <label for="lateFeeAmount">How much is the late fee?</label>
+                    </div>
+                    <div>
+                        <p-inputNumber mode="currency" currency="USD" locale="en-US" id="lateFeeAmount" [(ngModel)]="bill.lateFeeAmount"></p-inputNumber>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12" style="padding-bottom: 25px; margin-top: 25px;">
+        <div style="float: right">
+            <p-button type="button" (click)="closeModal.emit(true)" class="p-button-secondary" [disabled]="saving">Close</p-button>
+            <p-button type="button" (click)="add()" class="p-button-primary" [disabled]="saving">
+                <span *ngIf="saving"><i class="pi pi-spin pi-spinner"></i></span>                
+                Save changes
+            </p-button>
+        </div>    
+    </div>
