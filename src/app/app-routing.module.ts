@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ManageBillsComponent } from './core-components/manage-bills/manage-bills.component';
 import { ViewCalednarComponent } from './core-components/view-calendar/view-calednar.component';
 import { HomeComponent } from './core-components/home/home.component';
+import { ExcelComponent } from './excel/excel/excel.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'view-calendar',
     component: ViewCalednarComponent
+  },
+  {
+    path: 'generate-excel',
+    component: ExcelComponent
   }
 ];
 

@@ -1,0 +1,20 @@
+<div class="col-lg-3 col-12" style="display: inline-block; padding: 5px;">
+    <p-card *ngIf="day">
+        <div>{{day}}</div>
+        <div class="p-card-content">
+            <ul>
+                <li>Bill 1</li>
+            </ul>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="actionDropdown"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Action
+                </button>
+                <div class="dropdown-menu" aria-labelledby="actionDropdown">
+                    <a class="dropdown-item" href="#">Mark as paid</a>
+                    <a class="dropdown-item" href="#">Move</a>
+                </div>
+            </div>
+        </div>
+    </p-card>
+</div>

@@ -82,10 +82,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "finances-app-ui:build:production"
+              "buildTarget": "finances-app-ui:build:production"
             },
             "development": {
-              "browserTarget": "finances-app-ui:build:development"
+              "buildTarget": "finances-app-ui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -93,7 +93,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "finances-app-ui:build"
+            "buildTarget": "finances-app-ui:build"
           }
         },
         "test": {

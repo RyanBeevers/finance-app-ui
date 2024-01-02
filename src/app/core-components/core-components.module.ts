@@ -15,6 +15,10 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TooltipModule } from 'primeng/tooltip';
+import { ExcelGeneratorComponent } from './excel-generator/excel-generator.component';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { CardModule } from 'primeng/card';
+import { ReusableModule } from '../reusable/reusable.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +26,8 @@ import { TooltipModule } from 'primeng/tooltip';
     NavbarComponent,
     ViewCalednarComponent,
     HomeComponent,
-    BillDetailsComponent
+    BillDetailsComponent,
+    ExcelGeneratorComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +40,10 @@ import { TooltipModule } from 'primeng/tooltip';
     CalendarModule,
     InputTextModule,
     InputNumberModule,
-    TooltipModule
+    TooltipModule,
+    InputSwitchModule,
+    CardModule,
+    ReusableModule
   ],
   exports: [
     NavbarComponent,

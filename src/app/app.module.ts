@@ -8,7 +8,6 @@ import { AngularFirestoreModule } from  '@angular/fire/compat/firestore';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { NavbarComponent } from './core-components/navbar/navbar.component';
 import { CoreComponentsModule } from './core-components/core-components.module';
 
 @NgModule({

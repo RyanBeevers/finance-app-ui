@@ -23,4 +23,8 @@ export class NavbarComponent {
     this.router.navigate(['/view-calendar'])
   }
 
+  goToGenerateExcel(){
+    this.router.navigate(['/generate-excel'])
+  }
+
 }
