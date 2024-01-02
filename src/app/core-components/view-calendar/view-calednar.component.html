@@ -15,7 +15,7 @@
         <div class="col-lg-2 col-6 d-flex flex-column justify-content-between">
             <div></div> <!-- Spacer to push the button to the bottom -->
             <div>
-                <p-button (click)="doesCalandarAlreadyExist()">Search</p-button>
+                <p-button (click)="doesCalendarAlreadyExist()">Search</p-button>
             </div>
         </div>
         <div class="col-lg-1 col-6 d-flex flex-column justify-content-between">
@@ -45,22 +45,24 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-10 col-12">
-        <div class="col-lg-6 col-12" style="display: inline-block;">
-            <app-calendar-entry></app-calendar-entry>
-            <app-calendar-entry [day]="1"></app-calendar-entry>
-            <app-calendar-entry [day]="2"></app-calendar-entry>
-            <app-calendar-entry [day]="3"></app-calendar-entry>
+<div class="row" *ngIf="month">
+    <div class="col-12" *ngFor="let week of month">
+        <div class="col-lg-10 col-12" style="display: inline-block">
+            <div class="col-lg-6 col-12" style="display: inline-block;">
+                <app-calendar-entry></app-calendar-entry>
+                <app-calendar-entry [day]="week[0]"></app-calendar-entry>
+                <app-calendar-entry [day]="week[1]"></app-calendar-entry>
+                <app-calendar-entry [day]="week[2]"></app-calendar-entry>
+            </div>
+            <div class="col-lg-6 col-12" style="display: inline-block;">
+                <app-calendar-entry [day]="week[3]"></app-calendar-entry>
+                <app-calendar-entry [day]="week[4]"></app-calendar-entry>
+                <app-calendar-entry [day]="week[5]"></app-calendar-entry>
+                <app-calendar-entry [day]="week[6]"></app-calendar-entry>
+            </div>
         </div>
-        <div class="col-lg-6 col-12" style="display: inline-block;">
-            <app-calendar-entry [day]="4"></app-calendar-entry>
-            <app-calendar-entry [day]="5"></app-calendar-entry>
-            <app-calendar-entry [day]="6"></app-calendar-entry>
-            <app-calendar-entry [day]="7"></app-calendar-entry>
+        <div class="col-lg-2 col-12" style="display: inline-block">
+            <app-calendar-weekly-summary></app-calendar-weekly-summary>
         </div>
-    </div>
-    <div class="col-lg-2 col-12">
-        <app-calendar-weekly-summary></app-calendar-weekly-summary>
     </div>
 </div>

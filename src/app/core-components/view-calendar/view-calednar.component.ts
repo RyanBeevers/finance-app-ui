@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { filter, map, mergeMap, take } from 'rxjs';
 import { GeneratedMonths } from 'src/app/models/generatedMonths';
+import { CalendarService } from '../calendar.service';
 
 interface DropdownValue {
   label: string,
@@ -11,6 +12,11 @@ interface DropdownValue {
 interface StoreResponse {
   id?: string; 
   data?: any[];
+}
+
+interface StartDay {
+  dayOfTheWeek: string;
+  user: string;
 }
 
 @Component({
@@ -25,12 +31,14 @@ export class ViewCalednarComponent implements OnInit{
   years: DropdownValue[];
   selectedMonth: any;
   selectedYear: any;
+  startingDayOfTheWeek: any;
   locked: boolean = false;
   storeResponse: StoreResponse[] = [];
   generatedMonths: GeneratedMonths[] = [];
   selectedMonthData: GeneratedMonths = {};
+  month: number[][] = [];
 
-  constructor(private store: AngularFirestore){
+  constructor(private store: AngularFirestore, private calendarService: CalendarService){
     this.months = [
       {label: 'January', value: 1},
       {label: 'February', value: 2},
@@ -63,41 +71,65 @@ export class ViewCalednarComponent implements OnInit{
     const date = new Date();
     this.selectedMonth = this.months.find(month => month.value === date.getMonth() + 1)?.value;
     this.selectedYear = this.years.find(year => year.value === date.getFullYear())?.value;
-    this.doesCalandarAlreadyExist();
+    this.doesCalendarAlreadyExist();
   }
 
-  doesCalandarAlreadyExist() {
-    this.store.collection('generatedMonths').snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as GeneratedMonths;
-        const id = a.payload.doc.id;
-        return { id, ...data };
-      })),
-      mergeMap(documents => documents), // Flatten the array
-      filter(generatedMonth => 
-        generatedMonth.year === this.selectedYear &&
-        generatedMonth.month === this.selectedMonth &&
-        generatedMonth.user === 'RYAN2914'
-      ),
-      take(1) // Take only the first matching document
-    ).subscribe(filteredResponse => {
-      // Handle the filtered response here
-      console.log(filteredResponse);
-      if(filteredResponse) {
-        this.selectedMonthData = filteredResponse;
-        this.getMonthsBills(filteredResponse);
+  doesCalendarAlreadyExist() {
+    this.store.collection('generatedMonths', ref =>
+      ref.where('user', '==', 'RYAN2914')
+         .where('month', '==', this.selectedMonth)
+         .where('year', '==', this.selectedYear)
+         .limit(1) // Limit to 1 result, as you are using take(1) in your original code
+    ).get().subscribe(querySnapshot => {
+      if (!querySnapshot.empty) {
+        // Document exists, process data
+        const document = querySnapshot.docs[0];
+        const data = document.data() as GeneratedMonths;
+        this.selectedMonthData = { id: document.id, ...data };
+        this.locked = this.selectedMonthData.locked ? this.selectedMonthData.locked : false;
+        this.getStartDay();
       } else {
-        this.generateNewMonth({month: this.selectedMonth, year: this.selectedYear, user: 'RYAN2914', locked: false});
+        // Document does not exist
+        this.generateNewMonth({ month: this.selectedMonth, year: this.selectedYear, user: 'RYAN2914', locked: false });
       }
     }, (error) => {
       console.log('Error:', error);
     });
   }
+  
+  
+
+  getStartDay() {
+    this.store.collection('startDay', ref =>
+      ref.where('user', '==', 'RYAN2914')
+         .limit(1) // Limit to 1 result, as you are using take(1) in your original code
+    ).get().subscribe(querySnapshot => {
+      if (!querySnapshot.empty) {
+        // Document exists, process data
+        const document = querySnapshot.docs[0];
+        const data = document.data() as StartDay;
+        this.startingDayOfTheWeek = data.dayOfTheWeek;
+        this.getMonthsBills(data);
+      } else {
+        // Document does not exist
+        // this.generateNewMonth({ month: this.selectedMonth, year: this.selectedYear, user: 'RYAN2914', locked: false });
+      }
+    }, (error) => {
+      console.log('Error:', error);
+    });
+  }
+  
 
   getMonthsBills(generatedMonth: GeneratedMonths){
-    if(generatedMonth){
-      this.locked = generatedMonth.locked ? generatedMonth.locked : false;
+    this.month = this.calendarService.generateMonthArray(this.selectedYear, this.selectedMonth, this.startingDayOfTheWeek);
+    // let month1: number[][][] = this.calendarService.generateMonthMatrix(this.selectedYear, this.selectedMonth, this.startingDayOfTheWeek);
+    // console.log(month1);
+    //if month does not start on starting day of the week
+    console.log(this.month);
+    if(this.month[0][0] > 1){
+      console.log('month does not start on the first day');
     }
+    
   } 
 
   generateNewMonth(newGeneratedMonths: GeneratedMonths) {
@@ -114,7 +146,7 @@ export class ViewCalednarComponent implements OnInit{
 
   //Generate Months bills using the bill list
   generateMonth(){
-
+    this.getStartDay();
   }
 
   updateLocked(){
