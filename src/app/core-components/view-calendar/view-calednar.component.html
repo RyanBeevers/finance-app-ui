@@ -45,7 +45,29 @@
     </div>
 </div>
 
-<div class="row" *ngIf="month">
+<div class="row" *ngIf="billsArrayForMonth">
+    <div class="col-12" *ngFor="let week of billsArrayForMonth">
+        <div class="col-lg-10 col-12" style="display: inline-block">
+            <div class="col-lg-6 col-12" style="display: inline-block;">
+                <app-calendar-entry></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[0]"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[1]"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[2]"></app-calendar-entry>
+            </div>
+            <div class="col-lg-6 col-12" style="display: inline-block;">
+                <app-calendar-entry [billsArrayForMonth]="week[3]"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[4]"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[5]"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[6]"></app-calendar-entry>
+            </div>
+        </div>
+        <div class="col-lg-2 col-12" style="display: inline-block">
+            <app-calendar-weekly-summary></app-calendar-weekly-summary>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="row" *ngIf="month">
     <div class="col-12" *ngFor="let week of month">
         <div class="col-lg-10 col-12" style="display: inline-block">
             <div class="col-lg-6 col-12" style="display: inline-block;">
@@ -65,4 +87,4 @@
             <app-calendar-weekly-summary></app-calendar-weekly-summary>
         </div>
     </div>
-</div>
+</div> -->

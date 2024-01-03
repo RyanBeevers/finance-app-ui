@@ -1,0 +1,19 @@
+.link {
+    color: #38bdf8;
+    font-weight: bold;
+    cursor: pointer;
+}
+.link:hover{
+    color: #1275aa !important;
+    text-decoration: underline;
+}
+
+.link-paid {
+    color: #34d399;
+    font-weight: bold;
+    cursor: pointer;
+}
+.link-paid:hover{
+    color: #28ad80 !important;
+    text-decoration: underline;
+}

@@ -215,7 +215,8 @@ export class BillDetailsComponent implements OnInit {
         subCategory: this.bill?.subCategory ? this.bill?.subCategory : 'N/A',
         trackSpendingFlag: this.bill?.trackSpendingFlag,
         spent: this.bill?.spent ? this.bill?.spent : 0,
-        frequency: this.bill?.frequency ? this.bill?.frequency : 0
+        frequency: this.bill?.frequency ? this.bill?.frequency : 0,
+        user: 'RYAN2914'
       });
       setTimeout(() => {
         this.saving = false;
@@ -243,7 +244,8 @@ export class BillDetailsComponent implements OnInit {
         subCategory: this.bill?.subCategory ? this.bill?.subCategory : 'N/A',
         trackSpendingFlag: this.bill?.trackSpendingFlag,
         spent: this.bill?.spent ? this.bill?.spent : 0,
-        frequency: this.bill?.frequency ? this.bill?.frequency : 0
+        frequency: this.bill?.frequency ? this.bill?.frequency : 0,
+        user: 'RYAN2914'
       });
 
       setTimeout(() => {

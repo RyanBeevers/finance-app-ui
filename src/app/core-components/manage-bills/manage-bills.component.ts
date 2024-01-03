@@ -6,7 +6,7 @@ interface Column {
   field: string;
   header: string;
 }
-interface AllBillsResponse {
+export interface AllBillsResponse {
   id: string;
   data: Bill;
 }

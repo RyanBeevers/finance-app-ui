@@ -21,4 +21,5 @@ export interface Bill {
     trackSpendingFlag: boolean;
     spent?: number;
     frequency?: number;
+    user?: string;
 }

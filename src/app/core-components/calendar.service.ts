@@ -10,43 +10,16 @@ export class CalendarService {
 
   constructor() {}
 
-  generateMonthArray(year: number, month: number, startDayOfWeek: string): number[][] {
-    // const daysInMonth = new Date(year, month, 0).getDate();
-    // const firstDayOfMonth = new Date(year, month - 1, 1);
-    // const startDayIndex = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
-    
-    //   .indexOf(startDayOfWeek.toLowerCase());
-    // const offset = (startDayIndex - firstDayOfMonth.getDay() + 2) % 7;
-    // const totalDays = daysInMonth + offset;
-    // let currentDay = 1 - offset;
-    // const monthArray: number[][] = [];
-  
-    // while (currentDay <= totalDays) {
-    //   const week: number[] = [];
-    //   for (let i = 0; i < 7; i++) {
-    //     if (currentDay <= 0) {
-    //       const daysInPrevMonth = new Date(year, month - 1, 0).getDate();
-    //       week.push(daysInPrevMonth + currentDay);
-    //     } else if (currentDay > daysInMonth) {
-    //       week.push(currentDay - daysInMonth);
-    //     } else {
-    //       week.push(currentDay);
-    //     }
-    //     currentDay++;
-    //   }
-    //   monthArray.push(week);
-    // }
-    return this.generateMonthArray1(year, month, startDayOfWeek);
-    // return monthArray;
-  }
 
-  generateMonthArray1(year: number, month: number, startDayOfWeek: string): number[][] {
+  generateMonthArray(year: number, month: number, startDayOfWeek: string): number[][] {
     let response: number[][] = [];
     const firstDay = new Date(year, month - 1, 1).getDate();
     const lastDay = new Date(year, month, 0).getDate();
     const firstDateOfMonth = new Date(year, month - 1, 1);
     const firstDayOfMonth = firstDateOfMonth.getDay(); // 0 for Sunday, 1 for Monday, etc.
     const offset = this.getOffset(this.getDayNumber(startDayOfWeek), firstDayOfMonth);
+    console.log(startDayOfWeek);
+    console.log(offset);
     const lastDayOfLastMonth = new Date(year, month - 1, 0).getDate();
     let tempOffset = offset;
     let day = 1;
@@ -82,7 +55,6 @@ export class CalendarService {
     //set previous month
     let lastDayOfLastMonthVar = lastDayOfLastMonth;
     for(let i=6; i>-1; i--){
-      console.log(response[0][i]);
       if(!response[0][i]){
         response[0][i]=lastDayOfLastMonthVar;
         lastDayOfLastMonthVar--;
@@ -93,8 +65,6 @@ export class CalendarService {
   }
 
   private getOffset(startDayOfWeek: number, firstDayOfTheWeek: number): number {
-    console.log('supposed to start on a: ' + this.getDayName(startDayOfWeek) + '(' + startDayOfWeek + ')');
-    console.log('day of the week on the first day of the month: ' + this.getDayName(firstDayOfTheWeek) + '(' + firstDayOfTheWeek + ')');
     switch(startDayOfWeek){
       //SUNDAY
       case 0: {
@@ -282,14 +252,12 @@ export class CalendarService {
     return 0;
   }
   
-
   private getDayName(dayIndex: number): string {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return days[dayIndex];
   }
 
   private getDayNumber(dayString: string): number {
-    console.log(dayString);
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     return days.indexOf(dayString);
   }
