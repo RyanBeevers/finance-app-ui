@@ -57,19 +57,19 @@
         <div class="col-lg-10 col-12" style="display: inline-block">
             <div class="col-lg-6 col-12" style="display: inline-block;">
                 <app-calendar-entry></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[0]" [locked]="locked"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[1]" [locked]="locked"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[2]" [locked]="locked"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[0]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[1]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[2]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
             </div>
             <div class="col-lg-6 col-12" style="display: inline-block;">
-                <app-calendar-entry [billsArrayForMonth]="week[3]" [locked]="locked"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[4]" [locked]="locked"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[5]" [locked]="locked"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[6]" [locked]="locked"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[3]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[4]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[5]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
+                <app-calendar-entry [billsArrayForMonth]="week[6]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
             </div>
         </div>
         <div class="col-lg-2 col-12" style="display: inline-block">
-            <app-calendar-weekly-summary></app-calendar-weekly-summary>
+            <app-calendar-weekly-summary [weekOfBills]="week"></app-calendar-weekly-summary>
         </div>
     </div>
 </div>

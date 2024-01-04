@@ -6,6 +6,11 @@ import { CalendarWeeklySummaryComponent } from './calendar-weekly-summary/calend
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TooltipModule } from 'primeng/tooltip';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,11 +22,19 @@ import { TooltipModule } from 'primeng/tooltip';
     CardModule,
     ButtonModule,
     OverlayPanelModule,
-    TooltipModule
+    TooltipModule,
+    ToastModule,
+    DialogModule,
+    DropdownModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     CalendarEntryComponent,
     CalendarWeeklySummaryComponent
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class ReusableModule { }

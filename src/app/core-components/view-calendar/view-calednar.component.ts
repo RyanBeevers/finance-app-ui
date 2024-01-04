@@ -169,13 +169,13 @@ export class ViewCalednarComponent implements OnInit {
           //one was found, and second one was not
           if (foundOne && !foundOneAgain) {
             const generatedBills = this.findGeneratedBillsByDay(day);
-            let processMonthResponse: ProcessMonthResponse = { day: day, listOfBills: generatedBills }
+            let processMonthResponse: ProcessMonthResponse = { day: day, month:this.selectedMonth, listOfBills: generatedBills }
             billsArray.push(processMonthResponse);
           } else if (!foundOne) {
-            let processMonthResponse: ProcessMonthResponse = { day: day, listOfBills: undefined }
+            let processMonthResponse: ProcessMonthResponse = { day: day, month:this.selectedMonth-1, listOfBills: undefined }
             billsArray.push(processMonthResponse);
           } else if (foundOne && foundOneAgain) {
-            let processMonthResponse: ProcessMonthResponse = { day: day, listOfBills: undefined }
+            let processMonthResponse: ProcessMonthResponse = { day: day, month:this.selectedMonth+1, listOfBills: undefined }
             billsArray.push(processMonthResponse);
           }
         });
@@ -194,8 +194,8 @@ export class ViewCalednarComponent implements OnInit {
   findGeneratedBillsByDay(day: number): StoreResponse[] {
     let storeResponse: StoreResponse[] = [];
     for (let bill of this.generatedBills) {
-      if (bill.data?.bill?.dueDay === day) {
-        storeResponse.push({ id: bill.data.bill.id, data: bill as any })
+      if (bill.data?.date === day) {
+        storeResponse.push({ id: bill.id, data: bill as any })
       }
     }
     return storeResponse;
@@ -259,7 +259,8 @@ export class ViewCalednarComponent implements OnInit {
           locked: this.locked,
           bill: bill.data,
           user: 'RYAN2914',
-          paid: false
+          paid: false,
+          amount: bill.data.amount
         }
         this.bills.push(calendarEntry)
       }
@@ -316,11 +317,9 @@ export class ViewCalednarComponent implements OnInit {
     this.regenerating = true;
     this.reusableService.deleteGeneratedData('RYAN2914', this.selectedMonth, this.selectedYear)
     .subscribe((response)=>{
-      console.log(response);
       this.regenerating = false;
       this.hideRegenerateConfirmModal();
     }, (error)=>{
-      console.log('here');
       this.regenerating = false;
     })
   }
@@ -344,6 +343,7 @@ export interface CalendarEntry {
   bill?: Bill;
   user?: string;
   paid?: boolean;
+  amount?: number;
 }
 
 export interface GeneratedBillsResponse {
@@ -362,6 +362,7 @@ export interface MonthWithDaysWithBills {
 
 export interface ProcessMonthResponse {
   day: number,
+  month: number,
   listOfBills?: StoreResponse[];
 }
 

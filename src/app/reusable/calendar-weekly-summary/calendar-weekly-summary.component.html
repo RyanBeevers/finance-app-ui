@@ -5,9 +5,12 @@
         </div>
         <div class="p-card-content" style="font-size: x-small;">
             <ul>
-                <li>Income</li>
-                <li>Outgoing</li>
-                <li>Remainder</li>
+                <li>Income: ${{weeklyIncome}}</li>
+                <li>Outgoing: ${{weeklyOutgoing}}</li>
+                <li [ngClass]="getRemainderColor()">
+                    Remainder: ${{ weeklyRemainder | number }}
+                </li>
+                  
             </ul>
         </div>
     </p-card>
