@@ -1,25 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { filter, generate, map, mergeMap, take } from 'rxjs';
 import { GeneratedMonths } from 'src/app/models/generatedMonths';
 import { CalendarService } from '../calendar.service';
 import { Bill } from 'src/app/models/bill';
 import { AllBillsResponse } from '../manage-bills/manage-bills.component';
+import { ReusableService } from 'src/app/reusable/reusable.service';
 
-interface DropdownValue {
-  label: string,
-  value: any
-}
-
-interface StoreResponse {
-  id?: string;
-  data?: any[];
-}
-
-interface StartDay {
-  dayOfTheWeek: string;
-  user: string;
-}
 
 @Component({
   selector: 'app-view-calednar',
@@ -28,6 +14,7 @@ interface StartDay {
 })
 export class ViewCalednarComponent implements OnInit {
 
+  loading = true;
   items = [1, 2, 3, 4, 5, 6, 7, 8];
   months: DropdownValue[];
   years: DropdownValue[];
@@ -45,8 +32,14 @@ export class ViewCalednarComponent implements OnInit {
   generatedBills: GeneratedBillsResponse[] = [];
   billsByDate: any[] = [];
   billsArrayForMonth: any;
-  
-  constructor(private store: AngularFirestore, private calendarService: CalendarService) {
+  regenerating = false;
+  regeneratingMessage: any;
+  showConfirmRegenerate = false;
+
+  constructor(
+    private store: AngularFirestore, 
+    private calendarService: CalendarService,
+    private reusableService: ReusableService) {
     this.months = [
       { label: 'January', value: 1 },
       { label: 'February', value: 2 },
@@ -80,12 +73,25 @@ export class ViewCalednarComponent implements OnInit {
     this.selectedMonth = this.months.find(month => month.value === date.getMonth() + 1)?.value;
     this.selectedYear = this.years.find(year => year.value === date.getFullYear())?.value;
     this.doesCalendarAlreadyExist();
-    this.getStartDayOfWeek();
-    this.getMonthsBills();
+    // this.getStartDayOfWeek();
+    // this.getMonthsBills();
   }
 
   // Has this month been generated before?
   doesCalendarAlreadyExist() {
+    this.loading = true;
+    this.storeResponse = [];
+    this.generatedMonths = [];
+    this.selectedMonthData = {};
+    this.month = [];
+    this.bills = [];
+    this.listOfBills = [];
+    this.dataSource = undefined;
+    this.generatedBills = [];
+    this.billsByDate = [];
+    this.billsArrayForMonth = undefined;
+    this.getStartDayOfWeek();
+    this.getMonthsBills();
     this.store.collection('generatedMonths', ref =>
       ref.where('user', '==', 'RYAN2914')
         .where('month', '==', this.selectedMonth)
@@ -176,6 +182,7 @@ export class ViewCalednarComponent implements OnInit {
         billsArrayMonth.push(billsArray);
       });
       this.billsArrayForMonth = billsArrayMonth;
+      this.loading = false;
     } else {
       console.log('not loaded yet');
       setTimeout(()=>{
@@ -219,20 +226,21 @@ export class ViewCalednarComponent implements OnInit {
   //Get months bills for generating a new month, or comparing to existing
   getMonthsBills() {
     if(this.startingDayOfTheWeek){
-    this.month = this.calendarService.generateMonthArray(this.selectedYear, this.selectedMonth, this.startingDayOfTheWeek);
-    this.store.collection('bill', ref =>
-      ref.where('user', '==', 'RYAN2914')).snapshotChanges().subscribe((response) => {
-        this.dataSource = response.map(item => {
-          const data = item.payload.doc.data() as Bill[];
-          return { id: item.payload.doc.id, data };
-        });
-        this.listOfBills = this.dataSource;
-        this.listOfBills.sort((a, b) => a.data.dueDay - b.data.dueDay);
-        for (let bill of this.listOfBills) {
-          bill.data.id = bill.id;
-        }
+      this.month = this.calendarService.generateMonthArray(this.selectedYear, this.selectedMonth, this.startingDayOfTheWeek);
+      this.store.collection('bill', ref =>
+        ref.where('user', '==', 'RYAN2914')).snapshotChanges().subscribe((response) => {
+          this.dataSource = response.map(item => {
+            const data = item.payload.doc.data() as Bill[];
+            return { id: item.payload.doc.id, data };
+          });
+          this.listOfBills = this.dataSource;
+          this.listOfBills.sort((a, b) => a.data.dueDay - b.data.dueDay);
+          for (let bill of this.listOfBills) {
+            bill.data.id = bill.id;
+          }
       });
-    }else {
+    } else {
+      console.log('Starting date not loaded yet');
       setTimeout(()=>{
         this.getMonthsBills();
       }, 1000 )
@@ -241,6 +249,7 @@ export class ViewCalednarComponent implements OnInit {
 
   //After creating the month, generate all the bills for it
   generateMonthsBills() {
+    //todo - check for weekly bills, and add them weekly when needed
     if(this.listOfBills.length > 0) {
       for (let bill of this.listOfBills) {
         const calendarEntry: CalendarEntry = {
@@ -299,6 +308,31 @@ export class ViewCalednarComponent implements OnInit {
     }
   }
 
+  confirmRegenerate(){
+    this.showConfirmRegenerate = true;
+  }
+  
+  regenerateCalendar(){
+    this.regenerating = true;
+    this.reusableService.deleteGeneratedData('RYAN2914', this.selectedMonth, this.selectedYear)
+    .subscribe((response)=>{
+      console.log(response);
+      this.regenerating = false;
+      this.hideRegenerateConfirmModal();
+    }, (error)=>{
+      console.log('here');
+      this.regenerating = false;
+    })
+  }
+
+  hideRegenerateConfirmModal(){
+    this.regenerating = false;
+    this.regeneratingMessage = undefined;
+    this.showConfirmRegenerate = false;
+    // window.location.reload();
+    this.doesCalendarAlreadyExist();
+  }
+
 }
 
 
@@ -329,4 +363,20 @@ export interface MonthWithDaysWithBills {
 export interface ProcessMonthResponse {
   day: number,
   listOfBills?: StoreResponse[];
+}
+
+
+export interface DropdownValue {
+  label: string,
+  value: any
+}
+
+export interface StoreResponse {
+  id?: string;
+  data?: any[];
+}
+
+export interface StartDay {
+  dayOfTheWeek: string;
+  user: string;
 }

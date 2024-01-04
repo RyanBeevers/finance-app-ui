@@ -10,7 +10,8 @@ import { ConfirmationService } from 'primeng/api';
 export class CalendarEntryComponent implements OnInit {
 
   @Input('billsArrayForMonth') billsArrayForMonth?: any;
-
+  @Input('locked') locked = false;
+  
   constructor(private store: AngularFirestore){}
 
   ngOnInit(): void {
@@ -26,6 +27,10 @@ export class CalendarEntryComponent implements OnInit {
     this.store.collection('generatedBills').doc(generatedBill.data.id).update({ 
       paid: false
     });
+  }
+
+  moveBill(generatedBill: any){
+    
   }
 
 

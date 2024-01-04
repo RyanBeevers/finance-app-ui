@@ -5,10 +5,21 @@
             <div class="row">
                 <div class="col-10" style="display: inline-block;">
                     <div *ngFor="let bill of billsArrayForMonth.listOfBills">
-                        <div class="link" #targetEl [ngClass]="{'link-paid': bill.data.data.paid}" (click)="op.show($event, targetEl)">{{bill.data.data.bill.name}}</div>
+                        <div 
+                            #targetEl 
+                            [ngClass]="{'link-paid': bill.data.data.paid && !locked, 'link': !bill.data.data.paid && !locked}" 
+                            (click)="op.show($event, targetEl)">
+                                {{bill.data.data.bill.name}} <span *ngIf="locked">(${{bill.data.data.bill.amount}})</span>
+                                <!-- (${{bill.data.data.bill.amount}}) -->
+                        </div>
                         <p-overlayPanel #op>
                             <div style="font-size: x-small;">
-                                <div style="margin-bottom: 8px;" class="link">
+                                <div style="margin-bottom: 8px; width: 100%; text-align: center">
+                                    <b>{{bill.data.data.bill.name}}</b>
+                                    <br>
+                                    <b>${{bill.data.data.bill.amount}}</b>
+                                </div>
+                                <div *ngIf="bill.data.data.bill.billVariableFlag" style="margin-bottom: 8px;" class="link">
                                     <i class="pi pi-pencil" pTooltip="Edit"></i>Edit
                                 </div>
                                 <div *ngIf="!bill.data.data.paid" class="link-paid" (click)="markAsPaid(bill)">
@@ -16,6 +27,9 @@
                                 </div>
                                 <div *ngIf="bill.data.data.paid" class="link" (click)="markAsNotPaid(bill)">
                                     <i class="pi pi-minus-circle" pTooltip="Mark as Not Paid"></i> Mark as not paid
+                                </div>
+                                <div *ngIf="bill.data.data.bill.dueDateModifiableFlag" class="link" (click)="moveBill(bill)">
+                                    <i class="pi pi-arrows-h" pTooltip="Move to another day"></i>Move
                                 </div>
                             </div>
                         </p-overlayPanel>
