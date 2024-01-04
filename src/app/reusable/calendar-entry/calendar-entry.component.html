@@ -52,11 +52,11 @@
 
 
 <p-dialog [modal]="true" [(visible)]="showMoveBillConfirmationModal" header="Move bill"
-   [style]="{'width': '50vw', 'height': '30vw'}" [closeOnEscape]="false">
+   [style]="{'width': 'auto', 'height': 'auto'}" [closeOnEscape]="false">
     <ng-template pTemplate="content">
         <div *ngIf="movingErrorMessage == '' && !moving">
             <div *ngIf="billsArrayForMonth.day !== movingBill.data.data.bill.dueDay">Original Due Date: {{movingBill.data.data.bill.dueDay}}</div>
-            <p-dropdown [(ngModel)]="newDay" [options]="availableDates"></p-dropdown>
+            <p-dropdown appendTo="body" [(ngModel)]="newDay" [options]="availableDates"></p-dropdown>
         </div>
         <div *ngIf="moving">
             <i class="pi pi-spin pi-spinner"></i> Moving...
@@ -72,7 +72,7 @@
 </p-dialog>
 
 <p-dialog [modal]="true" [(visible)]="showEditBillConfirmationModal" header="Edit amount"
-   [style]="{'width': '30vw', 'height': 'auto'}" [closeOnEscape]="false">
+   [style]="{'width': 'auto', 'height': 'auto'}" [closeOnEscape]="false">
     <ng-template pTemplate="content">
         <div *ngIf="editErrorMessage == '' && !editing">
             <input [(ngModel)]="editingBill.data.data.amount">
