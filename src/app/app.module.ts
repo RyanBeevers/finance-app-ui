@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CoreComponentsModule } from './core-components/core-components.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { CoreComponentsModule } from './core-components/core-components.module';
     AngularFirestoreModule,
     RouterModule.forRoot([]),
     CommonModule,
-    CoreComponentsModule
+    CoreComponentsModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

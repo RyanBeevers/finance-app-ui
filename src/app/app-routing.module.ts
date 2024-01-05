@@ -4,6 +4,7 @@ import { ManageBillsComponent } from './core-components/manage-bills/manage-bill
 import { ViewCalednarComponent } from './core-components/view-calendar/view-calednar.component';
 import { HomeComponent } from './core-components/home/home.component';
 import { ExcelComponent } from './excel/excel/excel.component';
+import { ManageIncomeComponent } from './core-components/manage-income/manage-income.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'generate-excel',
     component: ExcelComponent
+  },
+  {
+    path: 'manage-income',
+    component: ManageIncomeComponent
   }
 ];
 

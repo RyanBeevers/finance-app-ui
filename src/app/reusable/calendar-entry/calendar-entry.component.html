@@ -5,7 +5,7 @@
         <div>{{billsArrayForMonth.day}}
             <span *ngIf="locked && !wrongMonthLocked" style="float: right;"><i class="pi pi-lock" style="font-size: 12px;"></i></span>
         </div>
-        <div class="p-card-content" style="font-size: x-small;">
+        <div class="p-card-content"  [ngStyle]="{'font-size': mobile ? '16px' : '14px'}">
             <div class="row">
                 <div class="col-12" style="display: inline-block;">
                     <div *ngFor="let bill of billsArrayForMonth.listOfBills">
@@ -20,7 +20,7 @@
                                 </span>
                         </div>
                         <p-overlayPanel #op>
-                            <div style="font-size: x-small;">
+                            <div  [ngStyle]="{'font-size': mobile ? '16px' : '14px'}">
                                 <div style="margin-bottom: 8px; width: 100%; text-align: center">
                                     <b>{{bill.data.data.bill.name}}</b>
                                     <br>

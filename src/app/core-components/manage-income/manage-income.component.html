@@ -1,0 +1,124 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div *ngIf="!loading && paychecks.length > 0">
+                <p-table [value]="paychecks" dataKey="id" editMode="row">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width:20%">Name</th>
+                            <th style="width:20%">Frequency</th>
+                            <th style="width:20%">Start Day</th>
+                            <th style="width:20%">Amount</th>
+                            <th style="width:20%">
+                                <button pButton type="button" icon="pi pi-plus" (click)="addRow()" class="p-button-rounded p-button-text"></button></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-paycheck let-editing="editing" let-ri="rowIndex">
+                        <tr [pEditableRow]="paycheck">
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="paycheck.data.name">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{ paycheck.data.name }}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown appendTo="body" [options]="payFrequencyOptions" [(ngModel)]="paycheck.data.frequency"></p-dropdown>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{ paycheck.data.frequency }}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <!-- <input pInputText [(ngModel)]="paycheck.data.payStartDate" /> -->
+                                        <p-calendar appendTo="body" [(ngModel)]="paycheck.data.payStartDate"></p-calendar>
+
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{ paycheck.data.payStartDate | date : 'yyyy-MM-dd'}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-inputNumber [(ngModel)]="paycheck.data.amount" inputId="currency-us" mode="currency" currency="USD" locale="en-US"> </p-inputNumber>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{ paycheck.data.amount | currency: 'USD' }}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <div class="flex align-items-center justify-content-center gap-2">
+                                    <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(paycheck)" class="p-button-rounded p-button-text"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="addOrEditPaycheck()" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(paycheck, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+                                    <button *ngIf="!editing" pButton type="button" icon="pi pi-trash" (click)="deleteConfirmPaycheck(paycheck)" class="p-button-rounded p-button-text p-button-danger"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <div *ngIf="loading" style="text-align: center;">
+                <h4><i class="pi pi-spin pi-spinner"></i>Loading...</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog [modal]="true" [(visible)]="showAddPaycheckModal" header="Add Paycheck"
+   [style]="{'width': 'auto'}" [closeOnEscape]="false">
+    <ng-template pTemplate="content">
+        <div *ngIf="!addingPaycheck && newPaycheck">
+            <label>Name</label><br>
+            <input pInputText type="text" [(ngModel)]="newPaycheck.name">
+            <br>
+            <label>Frequency</label><br>
+            <p-dropdown appendTo="body" [options]="payFrequencyOptions" [(ngModel)]="newPaycheck.frequency"></p-dropdown>
+            <br>
+            <label>Start Date</label><br>
+            <!-- <input pInputText [(ngModel)]="newPaycheck.payStartDate" /> -->
+            <p-calendar appendTo="body" [(ngModel)]="newPaycheck.payStartDate"></p-calendar>
+            <br>
+            <label>Amount</label><br>
+            <p-inputNumber [(ngModel)]="newPaycheck.amount" inputId="currency-us" mode="currency" currency="USD" locale="en-US"> </p-inputNumber>
+        </div>
+        <div *ngIf="addingPaycheck">
+            <i class="pi pi=spin pi-spinner"></i> Saving...
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <p-button type="button" severity="success" [style]="{'margin-right': '15px'}" (click)="addOrEditPaycheck()">Save</p-button>
+      <p-button type="button" severity="info" (click)="hideAddPaycheckModal()">Cancel</p-button>
+    </ng-template>
+    
+</p-dialog>
+
+
+<p-dialog [modal]="true" [(visible)]="showDeleteConfirmModal" header="Delete Paycheck"
+   [style]="{'width': 'auto'}" [closeOnEscape]="false">
+    <ng-template pTemplate="content">
+        <div *ngIf="deletePaycheck && deletePaycheck.data && !deleting">
+           Are you sure you want to delete paycheck: {{deletePaycheck.data.name}}?
+        </div>
+        <div *ngIf="deleting">
+            <i class="pi pi=spin pi-spinner"></i> Deleting...
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <p-button type="button" severity="danger" [style]="{'margin-right': '15px'}" (click)="deletePaycheckSubmit()">Delete</p-button>
+      <p-button type="button" severity="info" (click)="hideDeleteConfirmPaycheck()">Cancel</p-button>
+    </ng-template>
+    
+</p-dialog>

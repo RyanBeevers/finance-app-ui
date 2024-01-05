@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class CalendarWeeklySummaryComponent implements OnInit {
   
   @Input('weekOfBills') weekOfBills: any[] | undefined;
+  @Input('mobile') mobile = false;
   weeklyIncome: number = 2000;
   weeklyOutgoing: number = 0;
   weeklyRemainder: number = 0;
@@ -29,6 +30,7 @@ export class CalendarWeeklySummaryComponent implements OnInit {
       for (const week of this.weekOfBills) {
         // Check if the week has a listOfBills property
         if (week.listOfBills) {
+          console.log(week);
           // Iterate over each bill in the listOfBills
           for (const bill of week.listOfBills) {
             // Add the amount to the total

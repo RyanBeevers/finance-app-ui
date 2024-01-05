@@ -12,7 +12,7 @@ export class CalendarEntryComponent implements OnInit {
   @Input('billsArrayForMonth') billsArrayForMonth?: any;
   @Input('locked') locked = false;
   @Input('selectedMonth') selectedMonth: number = 0;
-  
+  @Input('mobile') mobile = false;
   showMoveBillConfirmationModal = false;
   movingBill: any;
   newDay: number = 1;

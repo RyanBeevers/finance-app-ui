@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ManageBillsComponent } from './manage-bills/manage-bills.component';
 import { ViewCalednarComponent } from './view-calendar/view-calednar.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
+import { ManageIncomeComponent } from './manage-income/manage-income.component';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -19,7 +20,10 @@ import { ExcelGeneratorComponent } from './excel-generator/excel-generator.compo
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CardModule } from 'primeng/card';
 import { ReusableModule } from '../reusable/reusable.module';
-
+import { ViewCalendarSmallScreenComponent } from './view-calendar-small-screen/view-calendar-small-screen.component';
+import { ViewCalendarLargeScreenComponent } from './view-calendar-large-screen/view-calendar-large-screen.component';
+import { BreakpointObserver, LayoutModule } from '@angular/cdk/layout';
+import { CarouselModule } from 'primeng/carousel'
 @NgModule({
   declarations: [
     ManageBillsComponent,
@@ -27,7 +31,10 @@ import { ReusableModule } from '../reusable/reusable.module';
     ViewCalednarComponent,
     HomeComponent,
     BillDetailsComponent,
-    ExcelGeneratorComponent
+    ExcelGeneratorComponent,
+    ManageIncomeComponent,
+    ViewCalendarSmallScreenComponent,
+    ViewCalendarLargeScreenComponent
   ],
   imports: [
     CommonModule,
@@ -43,11 +50,18 @@ import { ReusableModule } from '../reusable/reusable.module';
     TooltipModule,
     InputSwitchModule,
     CardModule,
-    ReusableModule
+    ReusableModule,
+    LayoutModule,
+    CalendarModule,
+    CarouselModule
   ],
   exports: [
     NavbarComponent,
     BillDetailsComponent
+  ],
+  providers: [
+    BreakpointObserver,
+    DatePipe
   ]
 })
 export class CoreComponentsModule { }

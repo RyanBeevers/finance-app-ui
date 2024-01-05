@@ -27,4 +27,8 @@ export class NavbarComponent {
     this.router.navigate(['/generate-excel'])
   }
 
+  goToManageInome(){
+    this.router.navigate(['/manage-income'])
+  }
+
 }

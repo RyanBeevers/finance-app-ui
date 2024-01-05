@@ -21,5 +21,6 @@
 .greyed-out {
     opacity: 0.5; /* You can adjust the opacity to control the "greyed-out" effect */
     pointer-events: none; /* This prevents interactions with the card when greyed out */
+    -webkit-opacity: 0.5;
   }
   
