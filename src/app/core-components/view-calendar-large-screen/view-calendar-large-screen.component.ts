@@ -6,6 +6,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { CalendarService } from '../calendar.service';
 import { ReusableService } from 'src/app/reusable/reusable.service';
 import { Bill } from 'src/app/models/bill';
+import { Paycheck, PaycheckResponse } from '../manage-income/manage-income.component';
 
 @Component({
   selector: 'app-view-calendar-large-screen',
@@ -36,7 +37,8 @@ export class ViewCalendarLargeScreenComponent {
   regenerating = false;
   regeneratingMessage: any;
   showConfirmRegenerate = false;
-
+  billsArrayMonth: ProcessMonthResponse[][] = [];
+  
   constructor(
     private store: AngularFirestore, 
     private calendarService: CalendarService,
@@ -150,12 +152,14 @@ export class ViewCalendarLargeScreenComponent {
     });
   }
 
-  //todo return this object.... 
-  processMonth(): void {
+  processMonth() {
+    // this.paydays = [];
+    console.log(this.months);
     if(this.month.length>0){
-      let billsArrayMonth: any[] = [];
+      let billsArrayMonth: ProcessMonthResponse[][] = [];
       let foundOne = false;
       let foundOneAgain = false;
+      // console.log(this.month);
       this.month.forEach((week) => {
         let billsArray: ProcessMonthResponse[] = [];
         week.forEach((day) => {
@@ -170,19 +174,51 @@ export class ViewCalendarLargeScreenComponent {
           //one was found, and second one was not
           if (foundOne && !foundOneAgain) {
             const generatedBills = this.findGeneratedBillsByDay(day);
-            let processMonthResponse: ProcessMonthResponse = { day: day, month:this.selectedMonth, listOfBills: generatedBills }
-            billsArray.push(processMonthResponse);
+            const paychecks = this.isDateAPayDay('RYAN2914', new Date(this.selectedYear, this.selectedMonth-1, day));
+            // console.log(paychecks);
+            let processMonthResponse: ProcessMonthResponse = { day: day, month:this.selectedMonth, year: this.selectedYear, listOfBills: generatedBills, income: paychecks }
+            billsArray = [...billsArray, processMonthResponse];
+            // billsArray.push(processMonthResponse);
           } else if (!foundOne) {
-            let processMonthResponse: ProcessMonthResponse = { day: day, month:this.selectedMonth-1, listOfBills: undefined }
-            billsArray.push(processMonthResponse);
+            let month = 0;
+            let year = 0;
+            if(this.selectedMonth===1){
+              month=12;
+              year = this.selectedYear-1;
+            } else {
+              month = this.selectedMonth-1;
+              year = this.selectedYear;
+            }
+            const paychecks = this.isDateAPayDay('RYAN2914', new Date(year, month-1, day));
+            let processMonthResponse: ProcessMonthResponse = { day: day, month:month, year: year, listOfBills: undefined, income: paychecks }
+            // billsArray.push(processMonthResponse);
+            billsArray = [...billsArray, processMonthResponse];
           } else if (foundOne && foundOneAgain) {
-            let processMonthResponse: ProcessMonthResponse = { day: day, month:this.selectedMonth+1, listOfBills: undefined }
-            billsArray.push(processMonthResponse);
+            let month = 0;
+            let year = 0;
+            if(this.selectedMonth===12){
+              month=1;
+              year=this.selectedYear+1;
+            } else {
+              month = this.selectedMonth+1;
+              year = this.selectedYear;
+            }
+            const paycheck = this.isDateAPayDay('RYAN2914', new Date(year, month-1, day));
+            let processMonthResponse: ProcessMonthResponse = { day: day, month:month, year: year, listOfBills: undefined, income: paycheck }
+            // billsArray.push(processMonthResponse);
+            billsArray = [...billsArray, processMonthResponse];
           }
         });
+        console.log(billsArray);
+        // billsArrayMonth = {...billsArrayMonth, billsArray};
         billsArrayMonth.push(billsArray);
       });
-      this.billsArrayForMonth = billsArrayMonth;
+      // this.billsArrayForMonth = billsArrayMonth;
+      //@ts-ignore
+      this.billsArrayForMonth = {...this.billsArrayForMonth, billsArrayMonth};
+      //@ts-ignore
+      this.billsArrayMonth = this.billsArrayForMonth['billsArrayMonth'];
+      console.log(this.billsArrayForMonth);
       this.loading = false;
     } else {
       console.log('not loaded yet');
@@ -190,6 +226,54 @@ export class ViewCalendarLargeScreenComponent {
         this.processMonth();
       }, 1500 )
     }
+  }
+  
+  
+  isDateAPayDay(user: string, date: Date): PaycheckResponse[] {
+    let responseObject: PaycheckResponse[] = [];
+    let paychecksResponse: PaycheckResponse[] = [];
+    this.store.collection('paychecks', ref =>
+      ref.where('user', '==', user)
+      //@ts-ignore
+    ).snapshotChanges().subscribe((response) => {
+      const responseData = response.map(item => {
+        let data = item.payload.doc.data() as Paycheck;
+        if(data.payStartDate instanceof Object){
+          //@ts-ignore
+          const timestampSeconds = data.payStartDate['seconds'] * 1000; // Convert seconds to milliseconds
+          data.payStartDate = new Date(timestampSeconds);
+        }
+        return { id: item.payload.doc.id, data };
+      });
+      paychecksResponse = responseData;
+      if(paychecksResponse.length > 0){
+        const today = new Date();
+        // Add 3 years to today's date
+        // const threeYearsLater = new Date();
+        let threeYearsLater = new Date(date);
+        
+        threeYearsLater.setMonth(threeYearsLater.getMonth()+2);
+        // threeYearsLater.setFullYear(today.getFullYear() + 1);
+        for(let check of paychecksResponse){
+          let checkStartDate = check.data?.payStartDate;
+          let frequency: number = check.data?.frequency === 'weekly' ? 7 : 14;
+          if(checkStartDate) {
+            while(checkStartDate < threeYearsLater){
+              // console.log(date);
+              if(checkStartDate.toDateString() === date.toDateString()) {
+                responseObject.push(check);
+                // this.paydays.push(check);
+                checkStartDate = threeYearsLater;
+              }
+              checkStartDate.setDate(checkStartDate.getDate() + frequency);
+            }
+          }
+        }
+        // console.log(responseObject);
+        return responseObject;
+      }
+    });
+    return responseObject;
   }
 
   findGeneratedBillsByDay(day: number): StoreResponse[] {

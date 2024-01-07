@@ -14,16 +14,19 @@
         </div>
         <div class="col-lg-2 col-6 d-flex flex-column justify-content-between">
             <div></div> <!-- Spacer to push the button to the bottom -->
-            <div>
-                <p-button (click)="doesCalendarAlreadyExist()">Search</p-button>
+            <div style="margin-top: 15px;">
+                <p-button (click)="doesCalendarAlreadyExist()" class="p-button-icon-only" severity="success" [style]="{'border-radius': '30px'}" pTooltip="Search" icon="pi pi-search"></p-button>
                 <p-button (click)="confirmRegenerate()" class="p-button-icon-only" severity="help" [style]="{'margin-left': '10px', 'border-radius': '30px'}" pTooltip="Refresh Month" icon="pi pi-refresh"></p-button>
             </div>
         </div>
         <div class="col-lg-1 col-6 d-flex flex-column justify-content-between">
             <div></div> <!-- Spacer to push the button to the bottom -->
-            <div>
-                <label for="lockedSwitch">Locked</label>
-                <p-inputSwitch [(ngModel)]="locked" id="lockedSwitch" (ngModelChange)="updateLocked()"></p-inputSwitch>
+            <div style="width: 100%;">
+                <div style="float: right;">
+                    <i class="pi pi-lock" style="font-size: 2rem" *ngIf="locked"></i>
+                    <i class="pi pi-unlock" style="font-size: 2rem" *ngIf="!locked"></i>
+                    <p-inputSwitch [(ngModel)]="locked" id="lockedSwitch" (ngModelChange)="updateLocked()"></p-inputSwitch>
+                </div>
             </div>
         </div>
     </div>
@@ -38,8 +41,8 @@
     </div>
 
     <div class="row">
-        <div class="col-12" *ngIf="billsArrayForMonth && billsArrayForMonth.length > 0">
-            <p-carousel [value]="billsArrayForMonth" [numVisible]="1" [numScroll]="1">
+        <div class="col-12" *ngIf="billsArrayMonth && !loading">
+            <p-carousel [value]="billsArrayMonth" [numVisible]="1" [numScroll]="1" [showNavigators]="true" [showIndicators]="true">
                 <ng-template pTemplate="item" let-week>
                     <div class="col-lg-10 col-12" style="display: inline-block">
                         <div class="col-lg-6 col-12" style="display: inline-block;">
@@ -63,43 +66,6 @@
             </p-carousel>
         </div>
     </div>
-<!--     
-    <div class="col-lg-10 col-12">
-        <div class="col-lg-6 col-12" style="display: inline-block;">
-            <div class="col-lg-3 col-12" style="display: inline-block;"></div>
-            <div class="col-lg-3 col-12" style="display: inline-block;">Friday</div>
-            <div class="col-lg-3 col-12" style="display: inline-block;">Saturday</div>
-            <div class="col-lg-3 col-12" style="display: inline-block;">Sunday</div>
-        </div>
-        <div class="col-lg-6 col-12" style="display: inline-block;">
-            <div class="col-lg-3 col-12" style="display: inline-block;">Monday</div>
-            <div class="col-lg-3 col-12" style="display: inline-block;">Tuesday</div>
-            <div class="col-lg-3 col-12" style="display: inline-block;">Wednesday</div>
-            <div class="col-lg-3 col-12" style="display: inline-block;">Thursday</div>
-        </div>
-    </div>
-</div>
-
-<div class="row" *ngIf="billsArrayForMonth">
-    <div class="col-12" *ngFor="let week of billsArrayForMonth">
-        <div class="col-lg-10 col-12" style="display: inline-block">
-            <div class="col-lg-6 col-12" style="display: inline-block;">
-                <app-calendar-entry></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[0]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[1]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[2]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
-            </div>
-            <div class="col-lg-6 col-12" style="display: inline-block;">
-                <app-calendar-entry [billsArrayForMonth]="week[3]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[4]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[5]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
-                <app-calendar-entry [billsArrayForMonth]="week[6]" [locked]="locked" [selectedMonth]="selectedMonth"></app-calendar-entry>
-            </div>
-        </div>
-        <div class="col-lg-2 col-12" style="display: inline-block">
-            <app-calendar-weekly-summary [weekOfBills]="week"></app-calendar-weekly-summary>
-        </div>
-    </div> -->
 </div>
 
 <p-dialog [modal]="true" [(visible)]="showConfirmRegenerate" header="Regenerate?"

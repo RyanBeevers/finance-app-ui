@@ -3,14 +3,13 @@
         <div>
             Weekly Summary
         </div>
-        <div class="p-card-content"  [ngStyle]="{'font-size': mobile ? '16px' : '14px'}">
+        <div class="p-card-content"  [ngStyle]="{'font-size': mobile ? '16px' : '12px'}">
             <ul>
                 <li>Income: ${{weeklyIncome}}</li>
                 <li>Outgoing: ${{weeklyOutgoing}}</li>
                 <li [ngClass]="getRemainderColor()">
                     Remainder: ${{ weeklyRemainder | number }}
                 </li>
-                  
             </ul>
         </div>
     </p-card>

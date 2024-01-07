@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { GeneratedMonths } from 'src/app/models/generatedMonths';
-import { CalendarService } from '../calendar.service';
 import { Bill } from 'src/app/models/bill';
-import { AllBillsResponse } from '../manage-bills/manage-bills.component';
-import { ReusableService } from 'src/app/reusable/reusable.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { PaycheckResponse } from '../manage-income/manage-income.component';
 
 @Component({
   selector: 'app-view-calednar',
@@ -60,6 +56,8 @@ export interface MonthWithDaysWithBills {
 export interface ProcessMonthResponse {
   day: number,
   month: number,
+  year: number,
+  income?: PaycheckResponse[] | undefined;
   listOfBills?: StoreResponse[];
 }
 

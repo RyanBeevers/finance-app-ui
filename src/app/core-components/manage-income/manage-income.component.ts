@@ -40,11 +40,7 @@ export class ManageIncomeComponent implements OnInit {
     ).snapshotChanges().subscribe((response) => {
       const responseData = response.map(item => {
         let data = item.payload.doc.data() as Paycheck;
-        console.log(typeof data.payStartDate)
-        console.log(data.payStartDate)
-        console.log(data.payStartDate instanceof Object)
         if(data.payStartDate instanceof Object){
-          console.log('here?')
           //@ts-ignore
           const timestampSeconds = data.payStartDate['seconds'] * 1000; // Convert seconds to milliseconds
           // console.log(test)
@@ -53,7 +49,6 @@ export class ManageIncomeComponent implements OnInit {
         return { id: item.payload.doc.id, data };
       });
       this.paychecks = responseData;
-      console.log(this.paychecks);
       this.loading = false;
     });
   }
@@ -64,14 +59,6 @@ export class ManageIncomeComponent implements OnInit {
     console.log(this.editDate);
     console.log(this.editDate);
       this.editPaycheck = paycheck;
-  }
-
-  onRowEditSave(paycheck: PaycheckResponse) {
-      if (paycheck.data && paycheck.data && paycheck.data.amount) {
-
-      } else {
-
-      }
   }
 
   onRowEditCancel(paycheck: Paycheck, index: number) {
@@ -132,14 +119,51 @@ export class ManageIncomeComponent implements OnInit {
         this.hideDeleteConfirmPaycheck();
       })
       .catch((error)=>{
-
       });
-
   }
 
   hideDeleteConfirmPaycheck(){
     this.deletePaycheck = undefined;
     this.showDeleteConfirmModal = false;
+  }
+
+  isDateAPayDay(user: string, date: Date): PaycheckResponse[]{
+    let response: PaycheckResponse[] = [];
+    let paychecksResponse: PaycheckResponse[] = [];
+    this.firestore.collection(this.PAYCHECKS_COLLECTION, ref =>
+      ref.where('user', '==', user)
+    ).snapshotChanges().subscribe((response) => {
+      const responseData = response.map(item => {
+        let data = item.payload.doc.data() as Paycheck;
+        if(data.payStartDate instanceof Object){
+          //@ts-ignore
+          const timestampSeconds = data.payStartDate['seconds'] * 1000; // Convert seconds to milliseconds
+          data.payStartDate = new Date(timestampSeconds);
+        }
+        return { id: item.payload.doc.id, data };
+      });
+      paychecksResponse = responseData;
+    });
+    if(paychecksResponse.length > 0){
+      const today = new Date();
+      // Add 3 years to today's date
+      const threeYearsLater = new Date();
+      threeYearsLater.setFullYear(today.getFullYear() + 3);
+      for(let check of paychecksResponse){
+        let checkStartDate = check.data?.payStartDate;
+        let frequency: number = check.data?.frequency === 'weekly' ? 7 : 14;
+        if(checkStartDate) {
+          while(checkStartDate < threeYearsLater){
+            if(checkStartDate === date) {
+              response.push(check);
+              checkStartDate = threeYearsLater;
+            }
+            checkStartDate.setDate(checkStartDate.getDate() + frequency);
+          }
+        }
+      }
+    }
+    return response;
   }
 
   exampleGetDate(){

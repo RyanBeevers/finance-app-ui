@@ -1,12 +1,12 @@
-<!-- large-screen.component.html -->
-<div *ngIf="isLargeScreen; else smallScreen">
-    <!-- Your large screen content goes here -->
-    large
-    <app-view-calendar-large-screen></app-view-calendar-large-screen>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div *ngIf="isLargeScreen; else smallScreen">
+                <app-view-calendar-large-screen></app-view-calendar-large-screen>
+            </div>
+            <ng-template #smallScreen>
+                <app-view-calendar-small-screen></app-view-calendar-small-screen>
+            </ng-template>
+        </div>
+    </div>
 </div>
-<!-- small-screen.component.html -->
-<ng-template #smallScreen>
-    small
-    <!-- Your small screen content goes here -->
-    <app-view-calendar-small-screen></app-view-calendar-small-screen>
-</ng-template>

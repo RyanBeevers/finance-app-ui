@@ -11,9 +11,10 @@
                     <div *ngFor="let bill of billsArrayForMonth.listOfBills">
                         <div 
                             #targetEl 
-                            [ngClass]="{'link-paid': bill.data.data.paid && !locked, 'link': !bill.data.data.paid && !locked}" 
+                            [ngClass]="{'link-paid': bill.data.data.paid && !locked, 'link': !bill.data.data.paid && !locked, 'locked-link-paid': bill.data.data.paid && locked, 'locked-link': !bill.data.data.paid && locked}" 
+                            [ngStyle]="{'font-size': mobile ? '16px' : '12px'}"
                             (click)="!locked ? op.show($event, targetEl) : null">
-                                {{bill.data.data.bill.name}} <span *ngIf="locked">(${{bill.data.data.bill.amount}})</span>
+                                {{bill.data.data.bill.name}} <span *ngIf="locked" [ngStyle]="{'font-size': mobile ? '12px' : '8px'}">(${{bill.data.data.bill.amount}})</span>
                                 
                                 <span *ngIf="billsArrayForMonth.day !== bill.data.data.bill.dueDay" pTooltip="Moved from original due date: {{bill.data.data.bill.dueDay}}" style="color: rgb(209, 108, 13)">
                                     <i class="pi pi-arrow-right"></i>
@@ -40,10 +41,14 @@
                                 </div>
                             </div>
                         </p-overlayPanel>
+                        
                     </div>
-                </div>
-                <div class="col-2" style="display: inline-block;">
-                
+                    <div *ngIf="billsArrayForMonth.income && billsArrayForMonth.income.length > 0" [ngStyle]="{'font-size': mobile ? '16px' : '8px'}">
+                        <div *ngFor="let paycheck of billsArrayForMonth.income" style="background-color: #34d399; border-radius: 25px; padding-left: 7px; padding-right: 7px; padding-top: 2px; padding-bottom: 2px; color: black; font-weight: bold; margin-bottom: 8px;">
+                            {{paycheck.data.name}}-{{paycheck.data.amount}}
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
         </div>

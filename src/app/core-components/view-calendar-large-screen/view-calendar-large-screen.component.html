@@ -15,15 +15,18 @@
         <div class="col-lg-2 col-6 d-flex flex-column justify-content-between">
             <div></div> <!-- Spacer to push the button to the bottom -->
             <div>
-                <p-button (click)="doesCalendarAlreadyExist()">Search</p-button>
+                <p-button (click)="doesCalendarAlreadyExist()" class="p-button-icon-only" severity="success" [style]="{'border-radius': '30px'}" pTooltip="Search" icon="pi pi-search"></p-button>
                 <p-button (click)="confirmRegenerate()" class="p-button-icon-only" severity="help" [style]="{'margin-left': '10px', 'border-radius': '30px'}" pTooltip="Refresh Month" icon="pi pi-refresh"></p-button>
             </div>
         </div>
         <div class="col-lg-1 col-6 d-flex flex-column justify-content-between">
             <div></div> <!-- Spacer to push the button to the bottom -->
-            <div>
-                <label for="lockedSwitch">Locked</label>
-                <p-inputSwitch [(ngModel)]="locked" id="lockedSwitch" (ngModelChange)="updateLocked()"></p-inputSwitch>
+            <div style="width: 100%;">
+                <!-- <div style="float: right;"> -->
+                    <i class="pi pi-lock" style="font-size: 1.5rem" *ngIf="locked"></i>
+                    <i class="pi pi-unlock" style="font-size: 1.5rem" *ngIf="!locked"></i>
+                    <p-inputSwitch [(ngModel)]="locked" id="lockedSwitch" (ngModelChange)="updateLocked()"></p-inputSwitch>
+                <!-- </div> -->
             </div>
         </div>
     </div>
@@ -52,8 +55,8 @@
     </div>
 </div>
 
-<div class="row" *ngIf="billsArrayForMonth">
-    <div class="col-12" *ngFor="let week of billsArrayForMonth">
+<div class="row" *ngIf="billsArrayMonth">
+    <div class="col-12" *ngFor="let week of billsArrayMonth">
         <div class="col-lg-10 col-12" style="display: inline-block">
             <div class="col-lg-6 col-12" style="display: inline-block;">
                 <app-calendar-entry></app-calendar-entry>
