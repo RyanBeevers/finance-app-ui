@@ -12,3 +12,10 @@
 .action svg{
     margin: 0px 5px 0px 5px;
 }
+
+html, body {
+    overflow-x: hidden;
+  }
+  body {
+    position: relative
+  }

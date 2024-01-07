@@ -23,6 +23,9 @@ export class ViewCalednarComponent implements OnInit {
     ]).subscribe(result => {
       this.isLargeScreen = result.matches;
     });
+    setTimeout(()=>{
+      window.scrollTo(0,0);
+    })
   }
 
 }

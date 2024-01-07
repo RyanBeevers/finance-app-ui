@@ -42,7 +42,7 @@
 
     <div class="row">
         <div class="col-12" *ngIf="billsArrayMonth && !loading">
-            <p-carousel [value]="billsArrayMonth" [numVisible]="1" [numScroll]="1" [showNavigators]="true" [showIndicators]="true">
+            <p-carousel [value]="billsArrayMonth" [numVisible]="1" [numScroll]="1" [showNavigators]="true" [showIndicators]="true" responsive="true" [circular]="true">
                 <ng-template pTemplate="item" let-week>
                     <div class="col-lg-10 col-12" style="display: inline-block">
                         <div class="col-lg-6 col-12" style="display: inline-block;">

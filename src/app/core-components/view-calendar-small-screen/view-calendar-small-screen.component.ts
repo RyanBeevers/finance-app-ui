@@ -8,6 +8,7 @@ import { ReusableService } from 'src/app/reusable/reusable.service';
 import { Bill } from 'src/app/models/bill';
 import { Paycheck, PaycheckResponse } from '../manage-income/manage-income.component';
 import { Observable } from 'rxjs';
+import { Carousel } from 'primeng/carousel';
 
 @Component({
   selector: 'app-view-calendar-small-screen',
@@ -45,6 +46,7 @@ export class ViewCalendarSmallScreenComponent {
     private store: AngularFirestore, 
     private calendarService: CalendarService,
     private reusableService: ReusableService) {
+    Carousel.prototype.onTouchMove = () => { };
     this.months = [
       { label: 'January', value: 1 },
       { label: 'February', value: 2 },
