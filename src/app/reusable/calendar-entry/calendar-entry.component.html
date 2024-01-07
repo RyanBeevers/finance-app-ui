@@ -1,6 +1,4 @@
-
 <div class="col-lg-3 col-12" style="display: inline-block; padding: 5px; vertical-align: bottom;">
-    <p-toast></p-toast>
     <p-card *ngIf="billsArrayForMonth" [style]="{'min-height': '250px'}" [ngClass]="{ 'greyed-out': wrongMonthLocked }">
         <div>{{billsArrayForMonth.day}}
             <span *ngIf="locked && !wrongMonthLocked" style="float: right;"><i class="pi pi-lock" style="font-size: 12px;"></i></span>

@@ -47,15 +47,15 @@
                     <div class="col-lg-10 col-12" style="display: inline-block">
                         <div class="col-lg-6 col-12" style="display: inline-block;">
                             <app-calendar-entry></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[0]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[1]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[2]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[0]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[1]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[2]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
                         </div>
                         <div class="col-lg-6 col-12" style="display: inline-block;">
-                            <app-calendar-entry [billsArrayForMonth]="week[3]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[4]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[5]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[6]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[3]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[4]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[5]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[6]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
                         </div>
                     </div>
                     <div class="col-lg-2 col-12" style="display: inline-block">
@@ -82,5 +82,44 @@
       <p-button type="button" severity="danger" [style]="{'margin-right': '15px'}" (click)="regenerateCalendar()">Yes</p-button>
       <p-button type="button" severity="info" (click)="hideRegenerateConfirmModal()">No</p-button>
     </ng-template>
-    
+</p-dialog>
+
+
+<p-dialog [modal]="true" [(visible)]="showMoveBillConfirmationModal" header="Move bill"
+   [style]="{'width': 'auto', 'height': 'auto'}" [closeOnEscape]="false">
+    <ng-template pTemplate="content">
+        <div *ngIf="movingErrorMessage == '' && !moving">
+            <div *ngIf="billsArrayForMonthFromCalendarEntry.billsArrayForMonth.day !== movingBill.data.data.bill.dueDay">Original Due Date: {{movingBill.data.data.bill.dueDay}}</div>
+            <span *ngIf="availableDates.length>0"><p-dropdown appendTo="body" [(ngModel)]="newDay" [options]="availableDates"></p-dropdown></span>
+        </div>
+        <div *ngIf="moving">
+            <i class="pi pi-spin pi-spinner"></i> Moving...
+        </div>
+        <div *ngIf="movingErrorMessage !== ''">
+            {{movingErrorMessage}}
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <p-button type="button" severity="info" (click)="hideMoveModal()" [style]="{'margin-right': '10px'}">Cancel</p-button>
+        <p-button type="button" severity="success" [style]="{'margin-right': '15px'}" (click)="moveBill()">Move</p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [modal]="true" [(visible)]="showEditBillConfirmationModal" header="Edit amount"
+   [style]="{'width': 'auto', 'height': 'auto'}" [closeOnEscape]="false">
+    <ng-template pTemplate="content">
+        <div *ngIf="editErrorMessage == '' && !editing">
+            <input [(ngModel)]="editingBill.data.data.amount">
+        </div>
+        <div *ngIf="editing">
+            <i class="pi pi-spin pi-spinner"></i> Editing...
+        </div>
+        <div *ngIf="editErrorMessage !== ''">
+            {{editErrorMessage}}
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <p-button type="button" severity="info" (click)="hideEditModal()" [style]="{'margin-right': '10px'}">Cancel</p-button>
+        <p-button type="button" severity="success" [style]="{'margin-right': '15px'}" (click)="editAmount()">Save</p-button>
+    </ng-template>
 </p-dialog>

@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MessageService } from 'primeng/api';
-
+import { EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-calendar-entry',
   templateUrl: './calendar-entry.component.html',
@@ -13,18 +13,21 @@ export class CalendarEntryComponent implements OnInit {
   @Input('locked') locked = false;
   @Input('selectedMonth') selectedMonth: number = 0;
   @Input('mobile') mobile = false;
-  showMoveBillConfirmationModal = false;
-  movingBill: any;
   newDay: number = 1;
   availableDates: number[] = [];
+  wrongMonthLocked = false;
   moving = false;
   movingErrorMessage = '';
-  wrongMonthLocked = false;
-
+  movingBill: any;
+  showMoveBillConfirmationModal = false;
   editing = false;
   editErrorMessage = '';
   editingBill: any;
   showEditBillConfirmationModal = false;
+  //@ts-ignore
+  @Output('moveBillConfirm') moveBillConfirmEmitter: EventEmitter<any> = new EventEmitter();
+  //@ts-ignore
+  @Output('editBillConfirm') editBillConfirmEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(private store: AngularFirestore, private messageService: MessageService){
         
@@ -73,8 +76,13 @@ export class CalendarEntryComponent implements OnInit {
   }
 
   moveBillConfirm(generatedBill: any){
-    this.movingBill = generatedBill;
-    this.showMoveBillConfirmationModal = true;
+    if(!this.mobile) {
+      this.movingBill = generatedBill;
+      this.showMoveBillConfirmationModal = true;
+    } else {
+      let returnObject = {generatedBill: generatedBill, billsArrayForMonth: this.billsArrayForMonth}
+      this.moveBillConfirmEmitter.emit(returnObject);
+    }
   }
 
   moveBill(){
@@ -98,8 +106,13 @@ export class CalendarEntryComponent implements OnInit {
   }
 
   editBillConfirm(generatedBill: any){
-    this.editingBill = generatedBill;
-    this.showEditBillConfirmationModal = true;
+    if(!this.mobile) {
+      this.editingBill = generatedBill;
+      this.showEditBillConfirmationModal = true;
+    } else {
+      let returnObject = {generatedBill: generatedBill, billsArrayForMonth: this.billsArrayForMonth}
+      this.editBillConfirmEmitter.emit(returnObject);
+    }
   }
 
   editAmount(){

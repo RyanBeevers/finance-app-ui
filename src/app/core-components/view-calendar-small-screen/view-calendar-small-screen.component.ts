@@ -41,6 +41,18 @@ export class ViewCalendarSmallScreenComponent {
   paydays: any;
   newObjectTest: any;
   billsArrayMonth: ProcessMonthResponse[][] = [];
+  billsArrayForMonthFromCalendarEntry: any;
+
+  moving = false;
+  movingErrorMessage = '';
+  movingBill: any;
+  showMoveBillConfirmationModal = false;
+  editing = false;
+  editErrorMessage = '';
+  editingBill: any;
+  showEditBillConfirmationModal = false;
+  newDay: number = 1;
+  availableDates: number[] = [];
 
   constructor(
     private store: AngularFirestore, 
@@ -415,6 +427,83 @@ export class ViewCalendarSmallScreenComponent {
     this.regeneratingMessage = undefined;
     this.showConfirmRegenerate = false;
     this.doesCalendarAlreadyExist();
+  }
+
+  
+  moveBillConfirm(event: any){
+    this.billsArrayForMonthFromCalendarEntry = event;
+    this.movingBill = this.billsArrayForMonthFromCalendarEntry.generatedBill;
+    this.setMonthDropdown();
+    this.showMoveBillConfirmationModal = true;
+  }
+
+  moveBill(){
+    this.moving = true;
+    this.store.collection('generatedBills').doc(this.movingBill.data.id).update({ 
+      //@ts-ignore
+      date: this.newDay
+    }).then(() => {
+        this.moving = false;
+        this.hideMoveModal();
+        // this.messageService.add({summary: 'Success', severity: 'success', detail: 'Successfully updated the date!'})
+      })
+      .catch(() => {
+        this.moving = false;
+        this.movingErrorMessage = 'There was an error updating the date!';
+      });
+  }
+
+  hideMoveModal(){
+    this.moving = false;
+    this.movingErrorMessage = '';
+    this.showMoveBillConfirmationModal = false;
+  }
+
+  editBillConfirm(event: any){
+    this.billsArrayForMonthFromCalendarEntry = event;
+    this.editingBill = this.billsArrayForMonthFromCalendarEntry.generatedBill;
+    this.setMonthDropdown();
+    this.showEditBillConfirmationModal = true;
+  }
+
+  editAmount(){
+    //this.editingBill.data.data.bill.amount
+    this.editing = true;
+    this.store.collection('generatedBills').doc(this.editingBill.data.id).update({ 
+      amount: this.editingBill.data.data.amount
+    }).then(() => {
+        this.editing = false;
+        this.hideEditModal();
+        // this.messageService.add({summary: 'Success', severity: 'success', detail: 'Successfully updated the amount!'})
+      })
+      .catch(() => {
+        this.editing = false;
+        this.editErrorMessage = 'There was an error updating the amount!';
+      });
+  }
+
+  hideEditModal(){
+    this.editing = false;
+    this.editErrorMessage = '';
+    this.showEditBillConfirmationModal = false;
+  }
+
+  setMonthDropdown(){
+    if(this.billsArrayForMonthFromCalendarEntry.billsArrayForMonth && this.billsArrayForMonthFromCalendarEntry.billsArrayForMonth.listOfBills && this.billsArrayForMonthFromCalendarEntry.billsArrayForMonth.listOfBills.length>0) {
+      this.newDay = this.billsArrayForMonthFromCalendarEntry.billsArrayForMonth.listOfBills[0].data.data.date;
+      const year = this.billsArrayForMonthFromCalendarEntry.billsArrayForMonth.listOfBills[0].data.data.year;
+      const month = this.billsArrayForMonthFromCalendarEntry.billsArrayForMonth.listOfBills[0].data.data.month;
+      function daysInMonth(month: number, year: number) {
+        return new Date(year, month, 0).getDate();
+      }
+      const numberOfDays = daysInMonth(month, year);
+      this.availableDates = Array.from({ length: numberOfDays }, (_, index) => index + 1);
+    } else {
+      setTimeout(()=>{
+        console.log('not found');
+        this.setMonthDropdown();
+      }, 1500)
+    }
   }
   
 }
