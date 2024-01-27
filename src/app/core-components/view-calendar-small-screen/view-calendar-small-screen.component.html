@@ -47,15 +47,15 @@
                     <div class="col-lg-10 col-12" style="display: inline-block">
                         <div class="col-lg-6 col-12" style="display: inline-block;">
                             <app-calendar-entry></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[0]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[1]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[2]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[0]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)" (addException)="showAddExceptionModal($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[1]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)" (addException)="showAddExceptionModal($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[2]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)" (addException)="showAddExceptionModal($event)"></app-calendar-entry>
                         </div>
                         <div class="col-lg-6 col-12" style="display: inline-block;">
-                            <app-calendar-entry [billsArrayForMonth]="week[3]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[4]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[5]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
-                            <app-calendar-entry [billsArrayForMonth]="week[6]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[3]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)" (addException)="showAddExceptionModal($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[4]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)" (addException)="showAddExceptionModal($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[5]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)" (addException)="showAddExceptionModal($event)"></app-calendar-entry>
+                            <app-calendar-entry [billsArrayForMonth]="week[6]" [locked]="locked" [selectedMonth]="selectedMonth" [mobile]="true" (moveBillConfirm)="moveBillConfirm($event)" (editBillConfirm)="editBillConfirm($event)" (addException)="showAddExceptionModal($event)"></app-calendar-entry>
                         </div>
                     </div>
                     <div class="col-lg-2 col-12" style="display: inline-block">
@@ -121,5 +121,33 @@
     <ng-template pTemplate="footer">
         <p-button type="button" severity="info" (click)="hideEditModal()" [style]="{'margin-right': '10px'}">Cancel</p-button>
         <p-button type="button" severity="success" [style]="{'margin-right': '15px'}" (click)="editAmount()">Save</p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [modal]="true" [(visible)]="addException" header="Add Exception"
+   [style]="{'width': 'auto', 'height': 'auto'}" [closeOnEscape]="false">
+    <ng-template pTemplate="content">
+        <div *ngIf="!exceptionError && !addingException">
+            <div class="col-12">
+                <div>
+                    <label for="amount">How many hours lost?</label>
+                    <input pInputText style="width: 100%" type="text" id="name" [(ngModel)]="exceptionHours" />
+                </div>
+                <div>
+                    <label for="amount">Reason (optional)?</label>
+                    <input pInputText style="width: 100%" type="text" id="name" [(ngModel)]="exceptionReason" />
+                </div>
+            </div>
+        </div>
+        <div *ngIf="addingException">
+            <i class="pi pi-spin pi-spinner"></i> Saving...
+        </div>
+        <div *ngIf="exceptionError">
+            {{exceptionError}}
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <p-button type="button" severity="info" (click)="hideAddExceptionModal()" [style]="{'margin-right': '10px'}">Cancel</p-button>
+        <p-button type="button" severity="success" [style]="{'margin-right': '15px'}" (click)="submitException()">Save</p-button>
     </ng-template>
 </p-dialog>

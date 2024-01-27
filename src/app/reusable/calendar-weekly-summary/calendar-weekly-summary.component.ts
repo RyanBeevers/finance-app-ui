@@ -64,13 +64,11 @@ export class CalendarWeeklySummaryComponent implements OnInit {
               paychecksWithPayDates.push(paycheckWithPayDates);
             }
           }
-          console.log(paychecksWithPayDates);
           for (const date1 of dates) {
             for(let paycheckWithDate of paychecksWithPayDates){
               //@ts-ignore
               if (Array.isArray(paycheckWithDate.dates) && paycheckWithDate.dates.some(date2 => date2 instanceof Date && date2.getTime() === date1.getTime())) {
                 console.log(`Match found for date: ${date1}`);
-                console.log(paycheckWithDate.paycheck);
                 this.weeklyIncome += paycheckWithDate.paycheck.data.amount;
               }
             }
@@ -105,7 +103,6 @@ export class CalendarWeeklySummaryComponent implements OnInit {
         if (week.listOfBills) {
           // Iterate over each bill in the listOfBills
           for (const bill of week.listOfBills) {
-            console.log(bill)
             // Add the amount to the total
             //@ts-ignore
             if(bill.data && bill.data['data'] && bill.data['data'].amount) {

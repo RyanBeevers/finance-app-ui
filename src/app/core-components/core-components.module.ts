@@ -24,6 +24,7 @@ import { ViewCalendarSmallScreenComponent } from './view-calendar-small-screen/v
 import { ViewCalendarLargeScreenComponent } from './view-calendar-large-screen/view-calendar-large-screen.component';
 import { BreakpointObserver, LayoutModule } from '@angular/cdk/layout';
 import { CarouselModule } from 'primeng/carousel'
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 @NgModule({
   declarations: [
     ManageBillsComponent,
@@ -53,7 +54,8 @@ import { CarouselModule } from 'primeng/carousel'
     ReusableModule,
     LayoutModule,
     CalendarModule,
-    CarouselModule
+    CarouselModule,
+    OverlayPanelModule
   ],
   exports: [
     NavbarComponent,

@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Output } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MessageService } from 'primeng/api';
 import { EventEmitter } from '@angular/core';
+import { PaycheckResponse } from 'src/app/core-components/manage-income/manage-income.component';
 @Component({
   selector: 'app-calendar-entry',
   templateUrl: './calendar-entry.component.html',
@@ -24,13 +25,12 @@ export class CalendarEntryComponent implements OnInit {
   editErrorMessage = '';
   editingBill: any;
   showEditBillConfirmationModal = false;
-  //@ts-ignore
   @Output('moveBillConfirm') moveBillConfirmEmitter: EventEmitter<any> = new EventEmitter();
-  //@ts-ignore
   @Output('editBillConfirm') editBillConfirmEmitter: EventEmitter<any> = new EventEmitter();
+  @Output('addException') addExceptionEventEmitter: EventEmitter<any> = new EventEmitter();
+  aDate: Date = new Date();
 
   constructor(private store: AngularFirestore, private messageService: MessageService){
-        
   }
 
   ngOnInit(): void {
@@ -116,7 +116,6 @@ export class CalendarEntryComponent implements OnInit {
   }
 
   editAmount(){
-    //this.editingBill.data.data.bill.amount
     this.editing = true;
     this.store.collection('generatedBills').doc(this.editingBill.data.id).update({ 
       amount: this.editingBill.data.data.amount
@@ -135,6 +134,21 @@ export class CalendarEntryComponent implements OnInit {
     this.editErrorMessage = '';
     this.showEditBillConfirmationModal = false;
   }
+
+  addException(paycheck: PaycheckResponse){
+    this.billsArrayForMonth.month;
+    this.billsArrayForMonth.day;
+    this.billsArrayForMonth.year
+    this.aDate = new Date(this.billsArrayForMonth.year, this.billsArrayForMonth.month, this.billsArrayForMonth.day);
+    let addExceptionRequest = {
+      date: this.aDate,
+      bill: paycheck,
+      user: paycheck?.data?.user
+    }
+    console.log(addExceptionRequest);
+    this.addExceptionEventEmitter.emit(addExceptionRequest);
+  }
+  
 
 
 }

@@ -38,6 +38,15 @@ export class ViewCalendarLargeScreenComponent {
   regeneratingMessage: any;
   showConfirmRegenerate = false;
   billsArrayMonth: ProcessMonthResponse[][] = [];
+
+  //adding an exception
+  addException = false;
+  addingException = false;
+  exceptionDate: Date = new Date();
+  exceptionHours: number = 0;
+  exceptionReason: string = '';
+  exceptionRequest: any;
+  exceptionError: any;
   
   constructor(
     private store: AngularFirestore, 
@@ -415,6 +424,49 @@ export class ViewCalendarLargeScreenComponent {
     this.showConfirmRegenerate = false;
     // window.location.reload();
     this.doesCalendarAlreadyExist();
+  }
+
+  showAddExceptionModal(event: any){
+    console.log('here?');
+    this.exceptionRequest = event;
+    // { date, bill id, user id }
+    this.addException = true;
+    console.log('here');
+    console.log(event);
+  }
+
+  hideAddExceptionModal(){
+    this.addException = false;
+    this.addingException = false;
+    this.exceptionDate = new Date();
+    this.exceptionHours = 0;
+    this.exceptionReason = '';
+    this.exceptionRequest = undefined;
+    this.exceptionError = undefined;
+  }
+
+  submitException(){
+    this.addingException = true;
+    let exceptionRequest = {
+      exceptionDate: this.exceptionDate,
+      exceptionHours: this.exceptionHours,
+      exceptionReason: this.exceptionReason,
+      exceptionBillId: this.exceptionRequest.bill.id,
+      user: this.exceptionRequest.user
+    }
+    this.store.collection('incomeExceptions').add(this.exceptionRequest)
+    .then((docRef) => {
+      //todo should probably set this var after creating? or then get it later...
+      console.log('Document added with ID: ', docRef.id);
+      this.addingException = false;
+      this.hideAddExceptionModal()
+    })
+    .catch((error) => {
+      this.exceptionError = 'Something went wrong saving your exception. Please try again later.';
+      this.addingException = false;
+      console.error('Error adding document: ', error);
+    });
+
   }
 
   

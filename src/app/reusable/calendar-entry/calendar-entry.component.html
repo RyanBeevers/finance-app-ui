@@ -6,6 +6,11 @@
         <div class="p-card-content"  [ngStyle]="{'font-size': mobile ? '16px' : '14px'}">
             <div class="row">
                 <div class="col-12" style="display: inline-block;">
+                    <div *ngIf="billsArrayForMonth.income && billsArrayForMonth.income.length > 0" [ngStyle]="{'font-size': mobile ? '16px' : '8px'}">
+                        <div *ngFor="let paycheck of billsArrayForMonth.income" class="income" (click)="addException(paycheck)">
+                            {{paycheck.data.name}}-{{paycheck.data.amount}}
+                        </div>
+                    </div>
                     <div *ngFor="let bill of billsArrayForMonth.listOfBills">
                         <div 
                             #targetEl 
@@ -39,12 +44,6 @@
                                 </div>
                             </div>
                         </p-overlayPanel>
-                        
-                    </div>
-                    <div *ngIf="billsArrayForMonth.income && billsArrayForMonth.income.length > 0" [ngStyle]="{'font-size': mobile ? '16px' : '8px'}">
-                        <div *ngFor="let paycheck of billsArrayForMonth.income" style="background-color: #34d399; border-radius: 25px; padding-left: 7px; padding-right: 7px; padding-top: 2px; padding-bottom: 2px; color: black; font-weight: bold; margin-bottom: 8px;">
-                            {{paycheck.data.name}}-{{paycheck.data.amount}}
-                        </div>
                         
                     </div>
                 </div>

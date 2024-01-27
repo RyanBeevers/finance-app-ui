@@ -35,3 +35,20 @@
     pointer-events: none;
     -webkit-pointer-events: none;
 }
+
+.income {
+    background-color: #34d399; 
+    border-radius: 25px; 
+    padding-left: 7px; 
+    padding-right: 7px; 
+    padding-top: 2px; 
+    padding-bottom: 2px; 
+    color: black; 
+    font-weight: bold; 
+    margin-bottom: 8px;
+    cursor: pointer !important;
+}
+
+.income:hover {
+    background-color: #26996f; 
+}

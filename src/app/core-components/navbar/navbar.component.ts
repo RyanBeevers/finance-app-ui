@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { UserInfo } from 'firebase/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +10,23 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent {
 
-  constructor(private router: Router){
+  user: UserInfo | null = null;
+
+  constructor(private router: Router, private afAuth: AngularFireAuth, private route: ActivatedRoute){
+    this.afAuth.user.subscribe((user) => {
+      if (user) {
+        // User is signed in
+        this.user = user;
+        console.log('User information:', user);
+        if (this.router.url.indexOf('login') !== -1 && this.user) {
+          this.goToViewCalendar();
+        }
+      } else {
+        this.goToLogin();
+        // No user signed in
+        this.user = null;
+      }
+    });
   }
 
   goToHome(){
@@ -31,4 +49,11 @@ export class NavbarComponent {
     this.router.navigate(['/manage-income'])
   }
 
+  goToLogout(){
+    this.router.navigate(['/logout'])
+  }
+
+  goToLogin(){
+    this.router.navigate(['/login'])
+  }
 }

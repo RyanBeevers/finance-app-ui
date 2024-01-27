@@ -5,8 +5,23 @@ import { ViewCalednarComponent } from './core-components/view-calendar/view-cale
 import { HomeComponent } from './core-components/home/home.component';
 import { ExcelComponent } from './excel/excel/excel.component';
 import { ManageIncomeComponent } from './core-components/manage-income/manage-income.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterAccountComponent } from './register-account/register-account.component';
+import { LogoutComponent } from './logout/logout.component';
 
 const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'register-account',
+    component: RegisterAccountComponent
+  },
+  {
+    path: 'logout',
+    component: LogoutComponent
+  },
   {
     path: '',
     component: HomeComponent

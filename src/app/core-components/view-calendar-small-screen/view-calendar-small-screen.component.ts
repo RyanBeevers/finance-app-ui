@@ -7,7 +7,6 @@ import { CalendarService } from '../calendar.service';
 import { ReusableService } from 'src/app/reusable/reusable.service';
 import { Bill } from 'src/app/models/bill';
 import { Paycheck, PaycheckResponse } from '../manage-income/manage-income.component';
-import { Observable } from 'rxjs';
 import { Carousel } from 'primeng/carousel';
 
 @Component({
@@ -53,6 +52,15 @@ export class ViewCalendarSmallScreenComponent {
   showEditBillConfirmationModal = false;
   newDay: number = 1;
   availableDates: number[] = [];
+
+  //adding an exception
+  addException = false;
+  addingException = false;
+  exceptionDate: Date = new Date();
+  exceptionHours: number = 0;
+  exceptionReason: string = '';
+  exceptionRequest: any;
+  exceptionError: any;
 
   constructor(
     private store: AngularFirestore, 
@@ -173,7 +181,6 @@ export class ViewCalendarSmallScreenComponent {
       let billsArrayMonth: ProcessMonthResponse[][] = [];
       let foundOne = false;
       let foundOneAgain = false;
-      // console.log(this.month);
       this.month.forEach((week) => {
         let billsArray: ProcessMonthResponse[] = [];
         week.forEach((day) => {
@@ -189,7 +196,6 @@ export class ViewCalendarSmallScreenComponent {
           if (foundOne && !foundOneAgain) {
             const generatedBills = this.findGeneratedBillsByDay(day);
             const paychecks = this.isDateAPayDay('RYAN2914', new Date(this.selectedYear, this.selectedMonth-1, day));
-            // console.log(paychecks);
             let processMonthResponse: ProcessMonthResponse = { day: day, month:this.selectedMonth, year: this.selectedYear, listOfBills: generatedBills, income: paychecks }
             billsArray = [...billsArray, processMonthResponse];
             // billsArray.push(processMonthResponse);
@@ -223,7 +229,26 @@ export class ViewCalendarSmallScreenComponent {
             billsArray = [...billsArray, processMonthResponse];
           }
         });
-        console.log(billsArray);
+        for(let bill of billsArray){
+          let payDate: Date = new Date(bill.year, bill.month, bill.day);
+          if(bill.income && bill.income.length>0){
+            for(let income of bill.income){
+
+
+          this.store.collection('incomeExceptions', ref =>
+            ref.where('user', '==', 'RYAN2914')
+            .where('date', '==', payDate)
+            .where('bill.id', '==', income.id)
+          ).snapshotChanges().subscribe((response) => {
+            const responseData = response.map(item => {
+              let data = item.payload.doc.data() as IncomeExceptionResponse;
+              return { id: item.payload.doc.id, data };
+            });
+            console.log(responseData);
+          });
+        }
+      }
+        }
         // billsArrayMonth = {...billsArrayMonth, billsArray};
         billsArrayMonth.push(billsArray);
       });
@@ -232,7 +257,6 @@ export class ViewCalendarSmallScreenComponent {
       this.billsArrayForMonth = {...this.billsArrayForMonth, billsArrayMonth};
       //@ts-ignore
       this.billsArrayMonth = this.billsArrayForMonth['billsArrayMonth'];
-      console.log(this.billsArrayForMonth);
       this.loading = false;
     } else {
       console.log('not loaded yet');
@@ -328,7 +352,6 @@ export class ViewCalendarSmallScreenComponent {
           let frequency: number = check.data?.frequency === 'weekly' ? 7 : 14;
           if(checkStartDate) {
             while(checkStartDate < threeYearsLater){
-              // console.log(date);
               if(checkStartDate.toDateString() === date.toDateString()) {
                 responseObject.push(check);
                 // this.paydays.push(check);
@@ -338,7 +361,6 @@ export class ViewCalendarSmallScreenComponent {
             }
           }
         }
-        // console.log(responseObject);
         return responseObject;
       }
     });
@@ -505,9 +527,106 @@ export class ViewCalendarSmallScreenComponent {
       }, 1500)
     }
   }
-  
+
+  editBillSpent: BillSpent[] = [];
+  billSpent: any;
+  showEditBillSpentConfirmationModal = false;
+  editingBillSpent = false;
+
+  editBillSpentConfirm(event: any){
+    this.store.collection('billSpent', ref =>
+      ref.where('billId', '==', event.id)
+    ).snapshotChanges().subscribe((response) => {
+      const responseData = response.map(item => {
+        const data = item.payload.doc.data() as BillSpentResponse;
+        return { id: item.payload.doc.id, data };
+      });
+      this.billSpent = responseData;
+      this.billsArrayForMonthFromCalendarEntry = event;
+      this.editBillSpent = this.billsArrayForMonthFromCalendarEntry.generatedBill;
+      this.showEditBillSpentConfirmationModal = true;
+      
+    });
+  }
+
+  editBillSpentSubmit(){
+    this.editingBillSpent = true;
+    this.store.collection('billSpent').add(this.billSpent)
+    .then((docRef) => {
+      //todo should probably set this var after creating? or then get it later...
+      console.log('Document added with ID: ', docRef.id);
+      this.editingBillSpent = false;
+      this.hideEditSpentModal()
+    })
+    .catch((error) => {
+      this.editingBillSpent = false;
+      this.hideEditSpentModal()
+      console.error('Error adding document: ', error);
+    });
+  }
+
+  hideEditSpentModal(){
+    this.editingBillSpent = false;
+    this.showEditBillSpentConfirmationModal = false;
+  }
+
+  showAddExceptionModal(event: any){
+    this.exceptionRequest = event;
+    this.addException = true;
+    this.exceptionDate = new Date();
+  }
+
+  hideAddExceptionModal(){
+    this.addException = false;
+    this.addingException = false;
+    this.exceptionHours = 0;
+    this.exceptionReason = '';
+    this.exceptionRequest = undefined;
+    this.exceptionError = undefined;
+  }
+
+  submitException(){
+    this.addingException = true;
+    let exceptionRequest = {
+      exceptionDate: this.exceptionDate,
+      exceptionHours: this.exceptionHours,
+      exceptionReason: this.exceptionReason,
+      exceptionBillId: this.exceptionRequest.bill.id,
+      user: this.exceptionRequest.user
+    }
+    this.store.collection('incomeExceptions').add(this.exceptionRequest)
+    .then((docRef) => {
+      //todo should probably set this var after creating? or then get it later...
+      console.log('Document added with ID: ', docRef.id);
+      this.addingException = false;
+      this.hideAddExceptionModal()
+    })
+    .catch((error) => {
+      this.exceptionError = 'Something went wrong saving your exception. Please try again later.';
+      this.addingException = false;
+      console.error('Error adding document: ', error);
+    });
+
+  }
+
 }
 
 export interface ProcessMonthArray {
   processMonthResponses: ProcessMonthResponse[];
+}
+
+export interface BillSpentResponse {
+  id: string,
+  data: BillSpent
+}
+
+export interface BillSpent {
+  billId: string,
+  name: string;
+  amount: number;
+}
+
+export interface IncomeExceptionResponse {
+  id: string,
+  data: any;
 }

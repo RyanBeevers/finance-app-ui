@@ -1,0 +1,62 @@
+<!-- login.component.html -->
+<div class="container-fluid">
+    <div class="row" style="margin-top: 25px;">
+        <div class="col-4 offset-4">
+
+            <p-card header="Login" styleClass="login-panel">
+                <form #loginForm="ngForm" (ngSubmit)="login()">
+                    <div class="row">
+                        <div class="col-12" style="text-align: center;">
+                            <div class="p-messages" *ngIf="errorMessage">
+                                {{ errorMessage }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="p-field">
+                        <div>
+                            <label for="email">Email</label>
+                        </div>
+                        <div>
+                            <input id="email" type="email" pInputText [(ngModel)]="email" name="email" required
+                                [style]="{'width': '100%'}" />
+                        </div>
+                    </div>
+
+                    <div class="p-field" style="margin-top: 15px;">
+                        <div>
+                            <label for="password">Password</label>
+                        </div>
+                        <div>
+                            <input id="password" type="password" pPassword [(ngModel)]="password" name="password"
+                                required [style]="{'width': '100%'}" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div style="float: right; margin-top: 15px;">
+                                <button type="button" pButton icon="pi pi-google" (click)="loginWithGoogle()" [disabled]="isLoading"  style="margin-right: 15px;">
+                                    <span style="margin-left: 5px;">Sign in</span>
+                                </button>
+                                <button type="submit" pButton label="Login"
+                                    [disabled]="!loginForm.valid || isLoading"></button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div *ngIf="isLoading" class="loading-indicator">
+                        Logging in...
+                    </div>
+
+                    <div class="register-link">
+                        Don't have an account? <a [routerLink]="['/register-account']">Create one here</a>.
+                    </div>
+
+                </form>
+            </p-card>
+
+        </div>
+    </div>
+</div>

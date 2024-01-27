@@ -3,11 +3,32 @@
 
   <div class="mr-auto" style="margin-left: 35px;">
     <button class="nav-link" (click)="goToHome()" routerLink="/manage-bills"
-      style="display: inline-block; margin-right: 15px; padding: 15px;">Home</button>
-    <button class="nav-link" (click)="goToManageBills()" routerLink="/manage-bills"
+      style="display: inline-block; margin-right: 15px; padding: 15px;" *ngIf="user">Home</button>
+    <button class="nav-link" (click)="goToManageBills()" routerLink="/manage-bills" *ngIf="user"
       style="display: inline-block; margin-right: 15px; padding: 15px;">Manage Bills</button>
-    <button class="nav-link" (click)="goToViewCalendar()" style="display: inline-block; padding: 15px;">View
+    <button class="nav-link" (click)="goToViewCalendar()" style="display: inline-block; padding: 15px;" *ngIf="user">View
       Calendar</button>
-    <button class="nav-link" (click)="goToManageInome()" style="display: inline-block; padding: 15px;">Manage Income</button>
+    <button class="nav-link" (click)="goToManageInome()" style="display: inline-block; padding: 15px;" *ngIf="user">Manage Income</button>
+  </div>
+  <div>
+    <div *ngIf="user" class="text-small">
+      <p>{{ user.displayName || user.email }}
+      <span #targetEl (click)="op.show($event, targetEl)" style="cursor: pointer" *ngIf="user.photoURL">
+        <img style="border-radius: 100px; height: 2rem; width: 2rem" [src]="user.photoURL" alt="Profile Picture"/>
+      </span>
+      <span #targetEl (click)="op.show($event, targetEl)" style="cursor: pointer" *ngIf="!user.photoURL">
+        <button pButton type="button" icon="pi pi-user" class="p-button-rounded p-button-info p-button-text"></button>
+
+      </span>
+        <p-overlayPanel #op>
+          <div>
+            <button pButton class="p-button-link" styleClass="p-button-sm" (click)="goToLogout()">Logout</button>
+          </div>
+        </p-overlayPanel>
+      </p>
+    </div>
+    <div *ngIf="!user" (click)="goToLogin()" style="cursor: pointer;">
+      <p>Please sign in</p>
+    </div>
   </div>
 </nav>

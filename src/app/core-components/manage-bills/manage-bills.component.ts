@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AuthService } from 'src/app/login/auth.service';
 import { Bill } from 'src/app/models/bill';
+import { UserService } from 'src/app/user.service';
 
 interface Column {
   field: string;
@@ -31,9 +33,15 @@ export class ManageBillsComponent {
   deleteId: any;
   showDeleteDialog = false;
 
-  constructor(private store: AngularFirestore) {}
+  user: any | null = null;
+
+  constructor(private store: AngularFirestore, private userService: UserService, private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+      console.log(this.user.uid);
+    });
     this.getAll();
     this.cols = [
       { field: 'name', header: 'Name' },
