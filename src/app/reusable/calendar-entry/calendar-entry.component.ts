@@ -2,7 +2,8 @@ import { Component, Input, OnInit, Output } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MessageService } from 'primeng/api';
 import { EventEmitter } from '@angular/core';
-import { PaycheckResponse } from 'src/app/core-components/manage-income/manage-income.component';
+import { PaycheckResponse } from 'src/app/models/paycheckResponse';
+
 @Component({
   selector: 'app-calendar-entry',
   templateUrl: './calendar-entry.component.html',
@@ -139,7 +140,7 @@ export class CalendarEntryComponent implements OnInit {
     this.billsArrayForMonth.month;
     this.billsArrayForMonth.day;
     this.billsArrayForMonth.year
-    this.aDate = new Date(this.billsArrayForMonth.year, this.billsArrayForMonth.month, this.billsArrayForMonth.day);
+    this.aDate = new Date(this.billsArrayForMonth.year, this.billsArrayForMonth.month-1, this.billsArrayForMonth.day);
     let addExceptionRequest = {
       date: this.aDate,
       bill: paycheck,

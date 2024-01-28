@@ -12,7 +12,7 @@ export class NavbarComponent {
 
   user: UserInfo | null = null;
 
-  constructor(private router: Router, private afAuth: AngularFireAuth, private route: ActivatedRoute){
+  constructor(private router: Router, private afAuth: AngularFireAuth){
     this.afAuth.user.subscribe((user) => {
       if (user) {
         // User is signed in

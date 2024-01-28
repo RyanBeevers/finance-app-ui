@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ProcessMonthResponse } from 'src/app/core-components/view-calendar/view-calednar.component';
 import { ReusableService } from '../reusable.service';
-import { PaycheckResponse } from 'src/app/core-components/manage-income/manage-income.component';
+import { PaycheckResponse } from 'src/app/models/paycheckResponse';
+import { ProcessMonthResponse } from 'src/app/models/processMonthResponse';
+import { AuthService } from 'src/app/core-components/core-services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar-weekly-summary',
@@ -15,14 +17,23 @@ export class CalendarWeeklySummaryComponent implements OnInit {
   weeklyIncome: number = 0;
   weeklyOutgoing: number = 0;
   weeklyRemainder: number = 0;
+  user: any | null = null;
 
-  constructor(private service: ReusableService){
+  constructor(private service: ReusableService, private authService: AuthService, private router: Router){
     
   }
 
   ngOnInit(): void {
-    if(this.weekOfBills && this.weekOfBills.length > 0)
-      this.getDates();
+    this.authService.user$.subscribe(user => {
+      if(user) {
+        this.user = user;
+        console.log(this.user.uid);
+        if(this.weekOfBills && this.weekOfBills.length > 0)
+        this.getDates();
+      }else{
+        this.router.navigate(['/login'])
+      }
+    });
   }
 
   getDates(){
@@ -50,9 +61,9 @@ export class CalendarWeeklySummaryComponent implements OnInit {
     // Create a new date one week from the highest date date
     oneWeekFromHighestDate.setDate(oneWeekFromHighestDate.getDate() + 7);
     //get income
-    let user = 'RYAN2914';
+    // let user = this.user.uid;
     let paychecks: PaycheckResponse[] = [];
-    this.service.getPaychecks(user).subscribe((response: PaycheckResponse[]) => {
+    this.service.getPaychecks(this.user.uid).subscribe((response: PaycheckResponse[]) => {
       if(response){
         paychecks = response;
         let paychecksWithPayDates: any[] = [];
@@ -68,7 +79,6 @@ export class CalendarWeeklySummaryComponent implements OnInit {
             for(let paycheckWithDate of paychecksWithPayDates){
               //@ts-ignore
               if (Array.isArray(paycheckWithDate.dates) && paycheckWithDate.dates.some(date2 => date2 instanceof Date && date2.getTime() === date1.getTime())) {
-                console.log(`Match found for date: ${date1}`);
                 this.weeklyIncome += paycheckWithDate.paycheck.data.amount;
               }
             }

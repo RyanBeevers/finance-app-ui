@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable, map } from 'rxjs';
-import { Paycheck, PaycheckResponse } from '../core-components/manage-income/manage-income.component';
+import { Paycheck } from '../models/paycheck';
+import { PaycheckResponse } from '../models/paycheckResponse';
 
 @Injectable({
   providedIn: 'root'

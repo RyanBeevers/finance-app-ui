@@ -1,47 +1,35 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ManageBillsComponent } from './core-components/manage-bills/manage-bills.component';
-import { ViewCalednarComponent } from './core-components/view-calendar/view-calednar.component';
 import { HomeComponent } from './core-components/home/home.component';
-import { ExcelComponent } from './excel/excel/excel.component';
-import { ManageIncomeComponent } from './core-components/manage-income/manage-income.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterAccountComponent } from './register-account/register-account.component';
-import { LogoutComponent } from './logout/logout.component';
+import { LoginComponent } from './core-components/login/login.component';
+import { RegisterAccountComponent } from './core-components/register-account/register-account.component';
+import { LogoutComponent } from './core-components/logout/logout.component';
 
 const routes: Routes = [
   {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'register-account',
-    component: RegisterAccountComponent
-  },
-  {
-    path: 'logout',
-    component: LogoutComponent
+    path: '',
+    loadChildren: () =>
+      import('./core-components/core-components.module').then((m) => m.CoreComponentsModule),
   },
   {
     path: '',
     component: HomeComponent
   },
   {
-    path: 'manage-bills',
-    component: ManageBillsComponent
-  },
-  {
     path: 'view-calendar',
-    component: ViewCalednarComponent
+    loadChildren: () =>
+      import('./calendar/calendar.module').then((m) => m.CalendarModule),
   },
   {
-    path: 'generate-excel',
-    component: ExcelComponent
+    path: 'manage-bills',
+    loadChildren: () =>
+      import('./bills/bills.module').then((m) => m.BillsModule),
   },
   {
     path: 'manage-income',
-    component: ManageIncomeComponent
-  }
+    loadChildren: () =>
+      import('./income/income.module').then((m) => m.IncomeModule),
+  },
 ];
 
 @NgModule({

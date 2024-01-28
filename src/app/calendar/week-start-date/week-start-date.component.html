@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <div class="row" style="margin-top: 25px;">
+        <div class="col-lg-4 offset-lg-4 col-12">
+            <p-card>
+                <h4>Starting day of the week</h4>
+                <div>
+                    <p-dropdown 
+                        [options]="weekdays" 
+                        [style]="{'width': '100%'}"
+                        [(ngModel)]="selectedDay">
+                    </p-dropdown>                
+                </div>
+                <div *ngIf="message != ''">
+                    <p class="text-success">{{message}}</p>
+                </div>
+                <ng-template pTemplate="footer">
+                    <div style="width: 100%; margin-bottom: 50px;">
+                        <button pButton severity="success" [style]="{'float': 'right'}" [disabled]="!selectedDay" (click)="saveStartDate()">
+                            Save
+                        </button>    
+                    </div>
+                    
+                </ng-template>
+            </p-card>
+        </div>
+    </div>
+</div>
